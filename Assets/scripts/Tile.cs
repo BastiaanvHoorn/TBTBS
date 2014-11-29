@@ -105,9 +105,23 @@ namespace Assets.scripts
 
         protected abstract void on_click();
         
-        public void set_unit()
+        public Unit set_unit()
         {
-            unit = new Unit((int)position.y);
+            Debug.Log(new Vector2(position.x, position.z));
+            unit = new Unit(new Vector2(position.x, position.z), (int)position.y);
+            return unit;
+        }
+
+        public Vector2 get_grid_pos()
+        {
+            if((position.x/reference.World.horizontal_space)%2 == 1)
+            {
+                return new Vector2(position.x / reference.World.horizontal_space, (position.z- reference.World.vertical_offset) / reference.World.vertical_space);
+            }
+            else
+            {
+                return new Vector2(position.x / reference.World.horizontal_space, position.z / reference.World.vertical_space);
+            }
         }
 
         //Render Stuff

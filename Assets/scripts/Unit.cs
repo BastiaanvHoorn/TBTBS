@@ -10,9 +10,12 @@ namespace Assets.scripts
     {
         public Mesh mesh { get; set; }
         int height;
-        public Unit(int _height)
+        Vector2 pos { get; set; }
+        public Unit(Vector2 _pos, int _height)
         {
-            _height = height;
+            Debug.Log(_pos);
+            pos = _pos;
+            height = _height;
         }
 
         public void spawn()
@@ -22,7 +25,8 @@ namespace Assets.scripts
             MeshRenderer mr = obj.AddComponent<MeshRenderer>();
             mf.mesh = Resources.LoadAssetAtPath("Assets/meshes/test_unit.blend", typeof(Mesh)) as Mesh;
             mr.material = new Material(Shader.Find("Diffuse"));
-            obj.transform.position = new Vector3(0, 1, 0);
+            Debug.Log(pos);
+            obj.transform.position = new Vector3(pos.x, height+.5f, pos.y);
         }
     }
 }

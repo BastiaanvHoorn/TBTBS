@@ -87,9 +87,10 @@ namespace Assets.scripts
             renderer.material.SetColor("_Color", new Color(.7f, .7f, .7f));
             renderer.material.SetTexture("_MainTex", texture);
 
-            tiles[0].set_unit();
-            tiles[0].unit.spawn();
-
+            Tile test = tiles.Find(tile => tile.get_grid_pos() == new Vector2(1, 2));
+            test.set_unit();
+            test.unit.spawn();
+            Debug.Log(tiles[6].get_grid_pos());
         }
 
         Vector3[] get_vertices()

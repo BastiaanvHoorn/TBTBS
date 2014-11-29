@@ -9,9 +9,9 @@ namespace Assets.scripts.reference
 {
     class World
     {
-        public static float vertical_offset = Math.sqrt_3 + .5f;
-        public static float vertical_space = vertical_offset * 2;
-        public static float horizontal_space = 3 + Math.cos_30;
+        public static float vertical_offset = Math.sqrt_3 + .5f; //2.23205080757
+        public static float vertical_space = vertical_offset * 2; //4.46410161514
+        public static float horizontal_space = 3 + Math.cos_30; //3.86602540378
 
         public static Vector2 vertex0 = new Vector2(-1, -reference.Math.sqrt_3);
         public static Vector2 vertex1 = new Vector2(1, -reference.Math.sqrt_3);
