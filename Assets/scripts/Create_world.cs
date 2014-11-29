@@ -40,7 +40,6 @@ namespace Assets.scripts
                 tri.AddRange(tiles[i].get_connection_tris(Util.v3_to_v2(vertices, "y"), original_length));
             }
             Vector2[] uv = new Vector2[vertices.Length];
-            Debug.Log(World.tex_scale);
             for (int i = 0; i < original_length; i++)
             {
                 int k = i % 6;
@@ -79,7 +78,6 @@ namespace Assets.scripts
                         break;
                 }
             }
-            Debug.Log(Util.index_of(vertices, new Vector3(-1, 0, -reference.Math.sqrt_3)));
 
             mesh.vertices = vertices;
             mesh.triangles = tri.ToArray();
@@ -88,6 +86,9 @@ namespace Assets.scripts
             mesh.Optimize();
             renderer.material.SetColor("_Color", new Color(.7f, .7f, .7f));
             renderer.material.SetTexture("_MainTex", texture);
+
+            tiles[0].set_unit();
+            tiles[0].unit.spawn();
 
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Assets.scripts.tile
 {
-    class Test :Tile
+    class Test : Tile
     {
-        public Test(Vector3 _position, int _index) 
+        public Test(Vector3 _position, int _index)
             : base(_position, _index)
         {
         }

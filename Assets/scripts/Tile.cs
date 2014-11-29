@@ -18,9 +18,10 @@ namespace Assets.scripts
         /// </summary>
         public Vector3 position { get; set; }
         /// <summary>
-        /// Type of the tile (no use yet)
+        /// The current unit standing on this tile.
+        /// Use set_unit to set this property;
         /// </summary>
-        public string type { get; set; }
+        public Unit unit{ get; private set; }
         /// <summary>
         /// All vertices for this tile (total of 6)
         /// </summary>
@@ -104,6 +105,11 @@ namespace Assets.scripts
 
         protected abstract void on_click();
         
+        public void set_unit()
+        {
+            unit = new Unit((int)position.y);
+        }
+
         //Render Stuff
         /// <summary>
         /// Generate the vertices for this tile.
