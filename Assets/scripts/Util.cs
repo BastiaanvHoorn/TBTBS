@@ -22,7 +22,8 @@ namespace Assets.scripts
             {
                 if (arr[i] == vector)
                 {
-                    return i; 
+                    return i;
+                    //Test
                 }
             }
             return -1;
