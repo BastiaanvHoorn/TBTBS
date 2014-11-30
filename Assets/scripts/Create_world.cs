@@ -87,14 +87,8 @@ namespace Assets.scripts
             renderer.material.SetColor("_Color", new Color(.7f, .7f, .7f));
             renderer.material.SetTexture("_MainTex", texture);
 
-            Tile test = tiles.Find(tile => tile.get_grid_pos() == new Vector2(1, 2));
-            Unit test_unit = test.set_unit<unit.Test>(new unit.Test());
-            test_unit.spawn();
-            Debug.Log("old position" + test_unit.parrent_tile.position.ToString());
+            Unit test_unit = new unit.Test();
             test_unit.move(tiles[20]);
-            Debug.Log("new position" + test_unit.parrent_tile.position.ToString());
-            Debug.Log(tiles[6].get_grid_pos());
-            
         }
 
         Vector3[] get_vertices()
