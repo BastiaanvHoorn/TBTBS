@@ -106,13 +106,13 @@ namespace Assets.scripts
 
         protected abstract void on_click();
         
-        public Unit set_unit<U>() where U:Unit, new()
+        public Unit set_unit<U>(Unit _unit) where U:Unit, new()
         {
             if (this.unit == null)
             {
                 U unit = new U();
-                unit.pos = new Vector2(position.x, position.z);
-                unit.height = (int)position.y;
+                unit.obj = new GameObject();
+                unit.obj.transform.position = this.position;
                 unit.parrent_tile = this;
                 this.unit = unit;
                 return unit;

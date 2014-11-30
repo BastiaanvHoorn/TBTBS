@@ -88,9 +88,13 @@ namespace Assets.scripts
             renderer.material.SetTexture("_MainTex", texture);
 
             Tile test = tiles.Find(tile => tile.get_grid_pos() == new Vector2(1, 2));
-            test.set_unit<unit.Test>();
-            test.unit.spawn();
+            Unit test_unit = test.set_unit<unit.Test>(new unit.Test());
+            test_unit.spawn();
+            Debug.Log("old position" + test_unit.parrent_tile.position.ToString());
+            test_unit.move(tiles[20]);
+            Debug.Log("new position" + test_unit.parrent_tile.position.ToString());
             Debug.Log(tiles[6].get_grid_pos());
+            
         }
 
         Vector3[] get_vertices()
