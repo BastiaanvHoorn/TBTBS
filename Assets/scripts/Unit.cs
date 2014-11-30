@@ -6,17 +6,14 @@ using UnityEngine;
 using UnityEditor;
 namespace Assets.scripts
 {
-    public class Unit
+    public abstract class Unit
     {
         public Mesh mesh { get; set; }
-        int height;
-        Vector2 pos { get; set; }
-        public Unit(Vector2 _pos, int _height)
-        {
-            Debug.Log(_pos);
-            pos = _pos;
-            height = _height;
-        }
+        public int height { get; set; }
+        public Vector2 pos { get; set; }
+        public Tile parrent_tile { get; set; }
+        
+        public Unit(){}
 
         public void spawn()
         {

@@ -19,7 +19,8 @@ namespace Assets.scripts
         public Vector3 position { get; set; }
         /// <summary>
         /// The current unit standing on this tile.
-        /// Use set_unit to set this property;
+        /// Use set_unit to set this property.
+        /// Use del_unit to remove the unit.
         /// </summary>
         public Unit unit{ get; private set; }
         /// <summary>
@@ -105,11 +106,34 @@ namespace Assets.scripts
 
         protected abstract void on_click();
         
-        public Unit set_unit()
+        public Unit set_unit<U>() where U:Unit, new()
         {
-            Debug.Log(new Vector2(position.x, position.z));
-            unit = new Unit(new Vector2(position.x, position.z), (int)position.y);
-            return unit;
+            if (this.unit == null)
+            {
+                U unit = new U();
+                unit.pos = new Vector2(position.x, position.z);
+                unit.height = (int)position.y;
+                unit.parrent_tile = this;
+                this.unit = unit;
+                return unit;
+            }
+            else
+            {
+                Debug.Log("there is allready a unity here");
+                return null;
+            }
+        }
+        public bool remove_unit()
+        {
+            if(this.unit != null)
+            {
+                this.unit = null;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public Vector2 get_grid_pos()

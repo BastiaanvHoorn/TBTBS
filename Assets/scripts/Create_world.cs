@@ -88,7 +88,7 @@ namespace Assets.scripts
             renderer.material.SetTexture("_MainTex", texture);
 
             Tile test = tiles.Find(tile => tile.get_grid_pos() == new Vector2(1, 2));
-            test.set_unit();
+            test.set_unit<unit.Test>();
             test.unit.spawn();
             Debug.Log(tiles[6].get_grid_pos());
         }
