@@ -18,8 +18,7 @@ namespace Assets.scripts
         public Texture texture;
         void Start()
         {
-            MeshFilter mf = GetComponent<MeshFilter>();
-            Mesh mesh = mf.mesh;
+            Mesh mesh = gameObject.AddComponent<MeshFilter>().mesh;
             
 
             add_tiles();

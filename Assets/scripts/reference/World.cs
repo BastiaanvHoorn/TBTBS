@@ -21,24 +21,27 @@ namespace Assets.scripts.reference
         public static Vector2 vertex5 = new Vector2(-2, 0);
 
 
-        public static Vector2[] hex_uv = new Vector2[6]{
-            new Vector2(64, 17),
-            new Vector2(192, 17),
-            new Vector2(256, 128),
-            new Vector2(192, 238),
-            new Vector2(64, 238),
-            new Vector2(0, 128),
+        public static Vector2[] hex_uv = new Vector2[6]
+        {
+            new Vector2(66, 19),                           //bot-left
+            new Vector2(190, 19),                          //bot-right
+            new Vector2(254, 128),                         //mid-right
+            new Vector2(190, 236),                         //top-right
+            new Vector2(66, 236),                          //top-left
+            new Vector2(2, 128),                           //mid-left
         };
-        public static Vector2[] tri_uv = new Vector2[3]{
-            new Vector2(256,0),
-            new Vector2(366.85f,64),
-            new Vector2(256,128),
+        public static Vector2[] tri_uv = new Vector2[3]
+        {
+            new Vector2(258,2),                            //bot-left
+            new Vector2(364.85f,64),                       //right
+            new Vector2(258,126),                          //top-left
         };
-        public static Vector2[] rect_uv = new Vector2[4]{
-            new Vector2(512,128),
-            new Vector2(256,128),
-            new Vector2(256,256),
-            new Vector2(512,256)
+        public static Vector2[] rect_uv = new Vector2[4]
+        {
+            new Vector2(510,130),                          //bot-right
+            new Vector2(258,130),                          //bot-left
+            new Vector2(258,254),                          //top-left
+            new Vector2(510,254)                           //top-right
         };
 
         public static decimal tex_scale = 0.00048828125m;
