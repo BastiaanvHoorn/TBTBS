@@ -30,37 +30,8 @@ namespace Assets.scripts
         /// </summary>
         public int index { get; set; }
 
-        //Constructors
-        /// <summary>
-        /// Calls the init function with the position of the tiles given in vector3
-        /// </summary>
-        /// <param name="_position">The absolute position of the tile</param>
-        /// <param name="_index">The index of the tile relative to the other tiles</param>
-        /// <param name="_type">The type of this tile</param>
-        public Tile(Vector3 _position, int _index)
-        {
-            init(_position, _index);
-        }
-        /// <summary>
-        /// Calls the init function with the position of the tiles given in ints
-        /// </summary>
-        /// <param name="x">The x-position in the hex-grid</param>
-        /// <param name="y">The height in the hex-grid</param>
-        /// <param name="z">The z-position in the hex-grid</param>
-        /// <param name="_index">The index of the tile relative to the other tiles</param>
-        /// <param name="_type">The type of this tile</param>
-        public Tile(int x, int y, int z, int _index)
-        {
-            if(x%2 == 1)
-            {
-                init(new Vector3(x * reference.World.horizontal_space, y, z*reference.World.vertical_space + reference.World.vertical_offset), _index);
-            }
-            else
-            {
-                init(new Vector3(x * reference.World.horizontal_space, y, z * reference.World.vertical_space), _index);
-            }
-        }
-        private void init(Vector3 _position, int _index)
+        public Tile() { }
+        public void init(Vector3 _position, int _index)
         {
             position = _position;
             index = _index;
@@ -71,20 +42,21 @@ namespace Assets.scripts
 
         public bool check_click(Vector2 mouse_pos, Camera camera)
         {
+            // Convert all corners of this tile to 2d coordinates on the screen
             Vector2 _0 = Util.v3_to_v2(camera.WorldToScreenPoint(position + Util.v2_to_v3(reference.World.vertex0, "y")), "z");
             Vector2 _1 = Util.v3_to_v2(camera.WorldToScreenPoint(position + Util.v2_to_v3(reference.World.vertex1, "y")), "z");
             Vector2 _2 = Util.v3_to_v2(camera.WorldToScreenPoint(position + Util.v2_to_v3(reference.World.vertex2, "y")), "z");
             Vector2 _3 = Util.v3_to_v2(camera.WorldToScreenPoint(position + Util.v2_to_v3(reference.World.vertex3, "y")), "z");
             Vector2 _4 = Util.v3_to_v2(camera.WorldToScreenPoint(position + Util.v2_to_v3(reference.World.vertex4, "y")), "z");
             Vector2 _5 = Util.v3_to_v2(camera.WorldToScreenPoint(position + Util.v2_to_v3(reference.World.vertex5, "y")), "z");
+
+            // All skewed lines that surround this tile
             float[] right_bot = Util.get_line(_1, _2);
             float[] right_top = Util.get_line(_2, _3);
             float[] left_top = Util.get_line(_5, _4);
             float[] left_bot = Util.get_line(_0, _5);
-            if (_4.y > mouse_pos.y && _1.y < mouse_pos.y)
-            {
-                //Debug.Log("clicked in between ");
-            }
+
+            // Check if the mouse is between those lines
             if ((mouse_pos.y > right_bot[0] * mouse_pos.x + right_bot[1]) &&
                (mouse_pos.y < left_top[0] * mouse_pos.x + left_top[1]) &&
                (mouse_pos.y < right_top[0] * mouse_pos.x + right_top[1]) &&

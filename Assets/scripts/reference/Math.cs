@@ -13,11 +13,6 @@ namespace Assets.scripts.reference
         public static float sqrt_3 = 1.732050807568877f;
 
         /// <summary>
-        /// sqare root of 1.5
-        /// </summary>
-        public static float sqrt_1_5 = 1.224744871391589f;
-
-        /// <summary>
         /// cosinus of 30 degrees
         /// </summary>
         public static float cos_30 = 0.86602540378f;
