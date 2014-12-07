@@ -98,6 +98,7 @@ namespace Assets.scripts
             {
                 return v3_to_v2(v3, "z");
             }
+            Debug.LogWarning("no empty axis found, new Vector2() will be returned");
             return new Vector2();
         }
 

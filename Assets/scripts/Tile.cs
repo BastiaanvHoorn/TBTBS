@@ -63,7 +63,6 @@ namespace Assets.scripts
                (mouse_pos.y > left_bot[0] * mouse_pos.x + left_bot[1]) &&
                (mouse_pos.y < _4.y) && (mouse_pos.y > _1.y))
             {
-                Debug.Log("clicked " + index);
                 on_click();
                 return true;
             }

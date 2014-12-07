@@ -41,22 +41,51 @@ namespace Assets.scripts
             tiles.Add(_tile);
         }
 
+        /// <summary>
+        /// Returns if the given tiles are lying next to each other (height doesn't matter)
+        /// The non-static method is preffered over this one
+        /// </summary>
+        /// <param name="tile_1">Position of the first tile</param>
+        /// <param name="tile_2">Position of the second tile</param>
+        static public bool is_adjecent(Vector3 tile_1, Vector3 tile_2)
+        {
+            return (Vector2.Distance(Util.v3_to_v2(tile_1,"y"), Util.v3_to_v2(tile_2,"y")) <= 4.464103f);
+        }
+        /// <summary>
+        /// Returns if the given tiles are lying next to each other (height doesn't matter)
+        /// This method is preferred over the static one
+        /// </summary>
+        /// <param name="tile_1">index of the first tile</param>
+        /// <param name="tile_2">index of the second tile</param>
+        public bool is_adjecent(int tile_1, int tile_2)
+        {
+            return (Vector2.Distance(Util.v3_to_v2(tiles[tile_1].position), Util.v3_to_v2(tiles[tile_2].position)) <= 4.464103f);
+        }
+
+        //Render stuff
+
+        /// <summary>
+        /// Gets all vertices of all registered tiles 5 times;
+        /// First set of vertices is used for the tile itself
+        /// Second set of vertices is used for connection triangles
+        /// Third set of vertices upper left and lower right connection triangles
+        /// Fourth set of vertices top and bottom connection rectangles
+        /// Fifth set of vertices upper right and lower left connection rectangles
+        /// </summary>
         public Vector3[] get_vertices()
         {
             Vector3[] vertices = new Vector3[] { };
 
+            //Concatenate the vertices of all tiles into one array
             for (int i = 0; i < count; i++)
             {
                 vertices = vertices.Concat(tiles[i].vertices).ToArray();
             }
 
             vertices_amount = vertices.Length;
+            //And do it a couple times more
             for (int loop = 1; loop <= 4; loop++)
             {
-                //Second set of vertices is used for connection triangles
-                //Third set of vertices upper left and lower right connection triangles
-                //Fourth set of vertices top and bottom connection rectangles
-                //Fifth set of vertices upper right and lower left connection rectangles
                 for (int i = 0; i < count; i++)
                 {
                     vertices = vertices.Concat(tiles[i].vertices).ToArray();
@@ -67,6 +96,14 @@ namespace Assets.scripts
             return vertices;
 
         }
+
+        /// <summary>
+        /// Gets all triangles resembling the playfield
+        /// </summary>
+        /// <param name="vertices">
+        /// All the vertices returned by get_vertices,
+        /// I intentionally did not reuse the get_vertices as passing around the array is a lot less resource intensive then re-running that function.
+        /// </param>
         public List<int> get_tri(Vector3[] vertices)
         {
             List<int> tri = new List<int>();
@@ -81,6 +118,10 @@ namespace Assets.scripts
             }
             return tri;
         }
+
+        /// <summary>
+        /// Gets all uv coordinates for the mesh
+        /// </summary>
         public Vector2[] get_uv()
         {
             Vector2[] uv = new Vector2[vertices_amount*5];

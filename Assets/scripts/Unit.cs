@@ -17,6 +17,7 @@ namespace Assets.scripts
             spawn();
         }
 
+        //Create the actual gameobject in the scene
         private void spawn()
         {
             Debug.Log("created new cube");
@@ -26,7 +27,25 @@ namespace Assets.scripts
             mf.mesh = Resources.LoadAssetAtPath("Assets/meshes/" + model_name , typeof(Mesh)) as Mesh;
             mr.material = new Material(Shader.Find("Diffuse"));
         }
-
-        public abstract void move(Tile target);
+        
+        public virtual string to_string()
+        {
+            return this.GetType().ToString() + " on " + this.obj.transform.position.ToString();
+        }
+        /// <summary>
+        /// Moves this unit to the target tile if possible
+        /// </summary>
+        /// <param name="target">The tile that the unit will try to move to</param>
+        /// <returns>Returns true if succeeded, returns false if failed</returns>
+        public virtual bool move(Tile target)
+        {
+            if (Tile_manager.is_adjecent(this.obj.transform.position, target.position))
+            {
+                this.parrent_tile = target;
+                this.obj.transform.position = target.position;
+                return true;
+            }
+            return false;
+        }
     }
 }

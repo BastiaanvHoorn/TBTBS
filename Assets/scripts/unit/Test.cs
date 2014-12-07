@@ -16,11 +16,5 @@ namespace Assets.scripts.unit
                 return "test_unit.blend";
             }
         }
-
-        public override void move(Tile target)
-        {
-            this.parrent_tile = target;
-            this.obj.transform.position = target.position;
-        }
     }
 }
