@@ -4,7 +4,7 @@ using System.Collections;
 public class camera_controller : MonoBehaviour {
 
 	// Use this for initialization
-    public Rigidbody rigidbody;
+    public new Rigidbody rigidbody;
 	void Start () {
 	
 	}

@@ -57,6 +57,7 @@ namespace Assets.scripts
                         {
                             Vector3 tile_pos = tile_manager.tiles[i].position;
                             move_focus(tile_pos);
+                            //TODO: add support for multiple units
                             if (unit_manager[0].obj.transform.position == tile_pos)
                             {
                                 selected_unit = 0;
@@ -68,6 +69,7 @@ namespace Assets.scripts
                         }
                         else
                         {
+                            //If the other mouse-button is pressed, move the selected unit to the clicked tile
                             if (tile_manager.tiles[i].check_click(Input.mousePosition, Camera.main) && selected_unit != -1)
                             {
                                 Vector3 tile_pos = tile_manager.tiles[i].position;
