@@ -37,13 +37,16 @@ namespace Assets.scripts
         /// </summary>
         /// <param name="target">The tile that the unit will try to move to</param>
         /// <returns>Returns true if succeeded, returns false if failed</returns>
-        public virtual bool move(Tile target)
+        public virtual bool move(Tile target, Unit_manager unit_manager)
         {
             if (Tile_manager.is_adjecent(this.obj.transform.position, target.position))
             {
-                this.parrent_tile = target;
-                this.obj.transform.position = target.position;
-                return true;
+                if(unit_manager.is_tile_empty(target))
+                {
+                    this.parrent_tile = target;
+                    this.obj.transform.position = target.position;
+                    return true;
+                }
             }
             return false;
         }

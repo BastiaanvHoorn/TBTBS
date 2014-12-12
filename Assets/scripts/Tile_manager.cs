@@ -8,7 +8,7 @@ using Assets.scripts.reference;
 
 namespace Assets.scripts
 {
-    class Tile_manager
+    public class Tile_manager
     {
         public List<Tile> tiles { get; private set; }
         public int count {
@@ -19,15 +19,23 @@ namespace Assets.scripts
         {
             tiles = new List<Tile>();
         }
+
+        public Tile this[int index]
+        {
+            get
+            {
+                return tiles[index];
+            }
+        }
         /// <summary>
         /// Adds a tile to the array of tiles
         /// </summary>
         /// <param name="x">The x-position of the tile in the hex-grid</param>
         /// <param name="y">The height of the tile in the hex-grid</param>
         /// <param name="z">The z-position of the tile in the hex-grid</param>
-        public void add_tile<Tile_type>(int x, int y, int z) where Tile_type:Tile , new()
+        public Tile add<Tile_type>(int x, int y, int z) where Tile_type:Tile , new()
         {
-            Tile_type _tile = new Tile_type();
+            Tile_type tile = new Tile_type();
             Vector3 _position;
             if (x % 2 == 1)
             {
@@ -37,8 +45,9 @@ namespace Assets.scripts
             {
                 _position = new Vector3(x * reference.World.horizontal_space, y, z * reference.World.vertical_space);
             }
-            _tile.init(_position, count);
-            tiles.Add(_tile);
+            tile.init(_position, count);
+            tiles.Add(tile);
+            return tile;
         }
 
         /// <summary>
