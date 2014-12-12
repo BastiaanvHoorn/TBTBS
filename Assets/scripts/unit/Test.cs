@@ -8,12 +8,19 @@ namespace Assets.scripts.unit
 {
     class Test:Unit
     {
+        public override string name
+        {
+            get
+            {
+                return "test";
+            }
+        }
         public Test() {}
         public override string model_name 
         {
             get
             {
-                return "test_unit.blend";
+                return "test_unit.obj";
             }
         }
     }

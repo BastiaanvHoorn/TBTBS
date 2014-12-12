@@ -11,7 +11,8 @@ namespace Assets.scripts
         public Tile parrent_tile { get; set; }
         public GameObject obj { get; set; }
         public abstract String model_name { get; }
-        
+        public abstract string name { get; }
+
         public Unit()
         {
             spawn();
@@ -21,7 +22,7 @@ namespace Assets.scripts
         private void spawn()
         {
             Debug.Log("created new cube");
-            obj = new GameObject();
+            obj = new GameObject(name);
             MeshFilter mf = obj.AddComponent<MeshFilter>();
             MeshRenderer mr = obj.AddComponent<MeshRenderer>();
             mf.mesh = Resources.LoadAssetAtPath("Assets/meshes/" + model_name , typeof(Mesh)) as Mesh;
