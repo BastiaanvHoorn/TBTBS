@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.scripts
 {
@@ -27,21 +28,20 @@ namespace Assets.scripts
         {
             Unit_type unit = new Unit_type();
             units.Add(unit);
-            
-            unit.move(tile, this);
+            unit.move(tile, this, true);
             return unit;
         }
-
         public bool is_tile_empty(Tile tile)
         {
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
-                if(units[i].parrent_tile == tile)
+                if (units[i].parrent_tile == tile)
                 {
                     return false;
                 }
             }
             return true;
         }
+        
     }
 }

@@ -36,10 +36,7 @@ namespace Assets.scripts
             renderer.material.SetColor("_Color", new Color(.7f, .7f, .7f));
             renderer.material.SetTexture("_MainTex", texture);
             unit_manager.add<unit.Test>(tile_manager[0]);
-            unit_manager.add<unit.Test>(tile_manager[0]);
-            unit_manager.add<unit.Test>(tile_manager[0]);
-            unit_manager.add<unit.Test>(tile_manager[0]);
-            unit_manager.add<unit.Test>(tile_manager[0]);
+            unit_manager.add<unit.Test>(tile_manager[8]);
             
         }
 
@@ -112,7 +109,7 @@ namespace Assets.scripts
             tile_manager.add<Test>(2, 0, 5);
             tile_manager.add<Test>(3, 0, 0);
             tile_manager.add<Test>(3, -1, 1);
-            tile_manager.add<Test>(3, 0, 2);
+            //tile_manager.add<Test>(3, 0, 2);
             tile_manager.add<Test>(3, 0, 3);
             tile_manager.add<Test>(3, 0, 4);
             tile_manager.add<Test>(4, 0, 0);

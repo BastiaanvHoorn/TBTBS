@@ -58,7 +58,7 @@ namespace Assets.scripts
         /// <param name="tile_2">Position of the second tile</param>
         static public bool is_adjecent(Vector3 tile_1, Vector3 tile_2)
         {
-            return (Vector2.Distance(Util.v3_to_v2(tile_1,"y"), Util.v3_to_v2(tile_2,"y")) <= 4.464103f);
+            return (Vector2.Distance(Util.v3_to_v2(tile_1,"y"), Util.v3_to_v2(tile_2,"y")) <= 5);
         }
         /// <summary>
         /// Returns if the given tiles are lying next to each other (height doesn't matter)
@@ -68,7 +68,7 @@ namespace Assets.scripts
         /// <param name="tile_2">index of the second tile</param>
         public bool is_adjecent(int tile_1, int tile_2)
         {
-            return (Vector2.Distance(Util.v3_to_v2(tiles[tile_1].position), Util.v3_to_v2(tiles[tile_2].position)) <= 4.464103f);
+            return (Vector2.Distance(Util.v3_to_v2(tiles[tile_1].position), Util.v3_to_v2(tiles[tile_2].position)) <= 5);
         }
 
         //Render stuff
@@ -137,40 +137,46 @@ namespace Assets.scripts
             for (int i = 0; i < vertices_amount; i++)
             {
                 int k = i % 6;
-                uv[i] = World.hex_uv[k] * (float)(World.tex_scale);
+                uv[i] = World.get_hex_uv(k);
                 switch (k)
                 {
-                    case 0:
-                        uv[i + vertices_amount * 1] = World.tri_uv[1] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 3] = World.rect_uv[2] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 4] = World.rect_uv[3] * (float)World.tex_scale;
-                        break;
-                    case 1:
-                        uv[i + vertices_amount * 1] = World.tri_uv[2] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 2] = World.rect_uv[0] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 3] = World.rect_uv[3] * (float)World.tex_scale;
-                        break;
-                    case 2:
-                        uv[i + vertices_amount * 1] = World.tri_uv[2] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 2] = World.rect_uv[1] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 4] = World.rect_uv[0] * (float)World.tex_scale;
-                        break;
-                    case 3:
-                        uv[i + vertices_amount * 1] = World.tri_uv[0] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 3] = World.rect_uv[0] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 4] = World.rect_uv[1] * (float)World.tex_scale;
-                        break;
-                    case 4:
-                        uv[i + vertices_amount * 1] = World.tri_uv[0] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 2] = World.rect_uv[2] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 3] = World.rect_uv[1] * (float)World.tex_scale;
-                        break;
-                    case 5:
-                        uv[i + vertices_amount * 1] = World.tri_uv[1] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 2] = World.rect_uv[3] * (float)World.tex_scale;
-                        uv[i + vertices_amount * 4] = World.rect_uv[2] * (float)World.tex_scale;
+                    case 0://bottom-left
+                        uv[i + vertices_amount * 1] = World.get_tri_uv(1);
+                        uv[i + vertices_amount * 3] = World.get_rect_uv(2);
+                        uv[i + vertices_amount * 4] = World.get_rect_uv(3);
+                        break;                                          
+            case 1://bottom-right                                
+                        uv[i + vertices_amount * 1] = World.get_tri_uv(2);
+                        uv[i + vertices_amount * 2] = World.get_rect_uv(0);
+                        uv[i + vertices_amount * 3] = World.get_rect_uv(3);
+                        break;                                           
+                    case 2://mid-right                                   
+                        uv[i + vertices_amount * 1] = World.get_tri_uv(2);
+                        uv[i + vertices_amount * 2] = World.get_rect_uv(1);
+                        uv[i + vertices_amount * 4] = World.get_rect_uv(0);
+                        break;                                           
+                    case 3://top-right                                   
+                        uv[i + vertices_amount * 1] = World.get_tri_uv(0);
+                        uv[i + vertices_amount * 3] = World.get_rect_uv(0);
+                        uv[i + vertices_amount * 4] = World.get_rect_uv(1);
+                        break;                                           
+                    case 4://top-left                                    
+                        uv[i + vertices_amount * 1] = World.get_tri_uv(0);
+                        uv[i + vertices_amount * 2] = World.get_rect_uv(2);
+                        uv[i + vertices_amount * 3] = World.get_rect_uv(1);
+                        break;                                           
+                    case 5://mid-left                                    
+                        uv[i + vertices_amount * 1] = World.get_tri_uv(1);
+                        uv[i + vertices_amount * 2] = World.get_rect_uv(3);
+                        uv[i + vertices_amount * 4] = World.get_rect_uv(2);
                         break;
                 }
+                uv[i + vertices_amount * 0] += new Vector2(0, 256) * (float)World.tex_scale;
+                uv[i + vertices_amount * 1] += new Vector2(0, 256) * (float)World.tex_scale;
+                uv[i + vertices_amount * 2] += new Vector2(0, 256) * (float)World.tex_scale;
+                uv[i + vertices_amount * 3] += new Vector2(0, 256) * (float)World.tex_scale;
+                uv[i + vertices_amount * 4] += new Vector2(0, 256) * (float)World.tex_scale;
+
             }
             return uv;
         }
