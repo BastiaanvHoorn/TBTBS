@@ -43,6 +43,7 @@ namespace Assets.scripts
 
         void Update()
         {
+            unit_manager.move_units();
             //Check for left-click on all tiles
             if (Input.GetMouseButtonDown(0)|| Input.GetMouseButton(1))
             {
@@ -54,7 +55,6 @@ namespace Assets.scripts
                         {
                             Vector3 tile_pos = tile_manager[i].position;
                             move_focus(tile_pos);
-                            //TODO: add support for multiple units
                             for (int j = 0; j < unit_manager.count; j++)
                             {
                                 if (unit_manager[j].obj.transform.position == tile_pos)

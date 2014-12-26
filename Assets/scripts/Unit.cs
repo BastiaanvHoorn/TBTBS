@@ -54,10 +54,13 @@ namespace Assets.scripts
         {
             if (Tile_manager.is_adjecent(this.obj.transform.position, target.position) || spawn)
             {
-                if(unit_manager.is_tile_empty(target))
+                if (unit_manager.is_tile_empty(target))
                 {
                     this.parrent_tile = target;
-                    this.obj.transform.position = target.position;
+                    if (spawn)
+                    {
+                        this.obj.transform.position = target.position;
+                    }
                     return true;
                 }
             }
@@ -66,6 +69,21 @@ namespace Assets.scripts
         public virtual bool move(Tile target, Unit_manager unit_manager)
         {
             return move(target, unit_manager, false);
+        }
+        public void move_towards()
+        {
+            if (this.obj.transform.position.y == parrent_tile.position.y|| Util.v3_to_v2(this.obj.transform.position, "y") == Util.v3_to_v2(parrent_tile.position, "y"))
+            {
+                this.obj.transform.position = Vector3.MoveTowards(this.obj.transform.position, parrent_tile.position, .1f);
+            }
+            else if(this.obj.transform.position.y >= parrent_tile.position.y)
+            {
+                this.obj.transform.position = Vector3.MoveTowards(this.obj.transform.position, new Vector3(parrent_tile.position.x, this.obj.transform.position.y, parrent_tile.position.z), .1f);
+            }
+            else
+            {
+                this.obj.transform.position = Vector3.MoveTowards(this.obj.transform.position, new Vector3(this.obj.transform.position.x, parrent_tile.position.y, this.obj.transform.position.z), .1f);
+            }
         }
     }
 }

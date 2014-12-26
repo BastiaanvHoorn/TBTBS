@@ -43,5 +43,12 @@ namespace Assets.scripts
             return true;
         }
         
+        public void move_units()
+        {
+            foreach(Unit unit in units)
+            {
+                unit.move_towards();
+            }
+        }
     }
 }
