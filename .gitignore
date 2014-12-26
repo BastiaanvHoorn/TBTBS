@@ -9,7 +9,7 @@ Library/
 # ===================================== #
 ExportedObj/
 obj/
-*.ide/
+tbtbs-csharp.sln.ide/
 *.svd
 *.userprefs
 /*.csproj
