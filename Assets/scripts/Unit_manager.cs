@@ -29,6 +29,7 @@ namespace Assets.scripts
             Unit_type unit = new Unit_type();
             units.Add(unit);
             unit.move(tile, this, true);
+            Debug.Log("Spawning " + unit.to_string());
             return unit;
         }
         public bool is_tile_empty(Tile tile)

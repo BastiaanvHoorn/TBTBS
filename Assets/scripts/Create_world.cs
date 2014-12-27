@@ -1,29 +1,25 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Assets.scripts;
-using Assets.scripts.reference;
+﻿using System.Collections.Generic;
 using Assets.scripts.tile;
+using UnityEngine;
 
 namespace Assets.scripts
 {
     public class Create_world : MonoBehaviour
     {
-        Tile_manager tile_manager = new Tile_manager();
         Unit_manager unit_manager = new Unit_manager();
+        Tile_manager tile_manager = new Tile_manager();
+        Input_manager input_manager;
         public GameObject focus;
-        public Rigidbody camera_rb;
         public Animator focus_an;
         public Texture texture;
-        public int selected_unit; //Index of the unit currently selected, if none: -1
         void Start()
         {
+            System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+            input_manager = new Input_manager(focus, focus_an);
             Mesh mesh = gameObject.AddComponent<MeshFilter>().mesh;
             
+            add_tiles(ref tile_manager);
 
-            add_tiles();
             Vector3[] vertices = tile_manager.get_vertices();
             List<int> tri = tile_manager.get_tri(vertices);
             Vector2[] uv = tile_manager.get_uv();
@@ -35,60 +31,25 @@ namespace Assets.scripts
             mesh.Optimize();
             renderer.material.SetColor("_Color", new Color(.7f, .7f, .7f));
             renderer.material.SetTexture("_MainTex", texture);
+
             unit_manager.add<unit.Test>(tile_manager[0]);
             unit_manager.add<unit.Test>(tile_manager[8]);
+
+            Debug.Log("Loaded world in " + sw.ElapsedMilliseconds + " ms");
+            sw.Stop();
             
         }
 
 
         void Update()
         {
-            unit_manager.move_units();
-            //Check for left-click on all tiles
-            if (Input.GetMouseButtonDown(0)|| Input.GetMouseButton(1))
-            {
-                for (int i = 0; i < tile_manager.count; i++)
-                {
-                    if (tile_manager[i].check_click(Input.mousePosition, Camera.main))
-                    {
-                        if (Input.GetMouseButton(0))
-                        {
-                            Vector3 tile_pos = tile_manager[i].position;
-                            move_focus(tile_pos);
-                            for (int j = 0; j < unit_manager.count; j++)
-                            {
-                                if (unit_manager[j].obj.transform.position == tile_pos)
-                                {
-                                    selected_unit = j;
-                                }
-                            }
-                            
-                        }
-                        else
-                        {
-                            //If the other mouse-button is pressed, move the selected unit to the clicked tile
-                            if (tile_manager[i].check_click(Input.mousePosition, Camera.main) && selected_unit != -1)
-                            {
-                                Vector3 tile_pos = tile_manager[i].position;
-                                move_focus(tile_pos);
-                                
-                                unit_manager[selected_unit].move(tile_manager[i], unit_manager);
-
-
-                            }
-                        }
-                    }
-                }
-            }
+            input_manager.process_input(ref unit_manager, ref tile_manager);
+            unit_manager.move_units();          
         }
 
-        private void move_focus(Vector3 pos)
-        {
-            focus.transform.position = pos + new Vector3(0, .005f, 0);
-            focus_an.Play("focus_fade", -1, .7f);
-        }
 
-        private void add_tiles()
+
+        private void add_tiles(ref Tile_manager tile_manager)
         {
             tile_manager.add<Test>(0, 0, 0);
             tile_manager.add<Test>(0, 0, 1);
