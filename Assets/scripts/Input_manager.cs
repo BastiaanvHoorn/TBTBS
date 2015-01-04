@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 namespace Assets.scripts
 {
+    //THIS CLASS DOES NOT HANDLE THE CAMERA CONTROLS
+    //THE CAMERA CONTROLS ARE HANDELED IN "attached/Camera_controller.cs"
     class Input_manager
     {
         public GameObject focus;

@@ -30,6 +30,8 @@ namespace Assets.scripts
         /// </summary>
         public int index { get; set; }
 
+        public abstract Vector2 tex_location { get; }
+
         public Tile() { }
         public void init(Vector3 _position, int _index)
         {

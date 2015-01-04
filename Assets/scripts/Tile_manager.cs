@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -134,6 +134,7 @@ namespace Assets.scripts
         public Vector2[] get_uv()
         {
             Vector2[] uv = new Vector2[vertices_amount*5];
+            //Loops through one set of vertices
             for (int i = 0; i < vertices_amount; i++)
             {
                 int k = i % 6;
@@ -145,7 +146,7 @@ namespace Assets.scripts
                         uv[i + vertices_amount * 3] = World.get_rect_uv(2);
                         uv[i + vertices_amount * 4] = World.get_rect_uv(3);
                         break;                                          
-            case 1://bottom-right                                
+                    case 1://bottom-right                                
                         uv[i + vertices_amount * 1] = World.get_tri_uv(2);
                         uv[i + vertices_amount * 2] = World.get_rect_uv(0);
                         uv[i + vertices_amount * 3] = World.get_rect_uv(3);
@@ -171,11 +172,11 @@ namespace Assets.scripts
                         uv[i + vertices_amount * 4] = World.get_rect_uv(2);
                         break;
                 }
-                uv[i + vertices_amount * 0] += new Vector2(0, 256) * (float)World.tex_scale;
-                uv[i + vertices_amount * 1] += new Vector2(0, 256) * (float)World.tex_scale;
-                uv[i + vertices_amount * 2] += new Vector2(0, 256) * (float)World.tex_scale;
-                uv[i + vertices_amount * 3] += new Vector2(0, 256) * (float)World.tex_scale;
-                uv[i + vertices_amount * 4] += new Vector2(0, 256) * (float)World.tex_scale;
+                uv[i + vertices_amount * 0] += tiles[i/6].tex_location * (float)World.tex_scale;
+                uv[i + vertices_amount * 1] += tiles[i/6].tex_location * (float)World.tex_scale;
+                uv[i + vertices_amount * 2] += tiles[i/6].tex_location * (float)World.tex_scale;
+                uv[i + vertices_amount * 3] += tiles[i/6].tex_location * (float)World.tex_scale;
+                uv[i + vertices_amount * 4] += tiles[i/6].tex_location * (float)World.tex_scale;
 
             }
             return uv;
