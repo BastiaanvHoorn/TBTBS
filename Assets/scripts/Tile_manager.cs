@@ -50,17 +50,26 @@ namespace Assets.scripts
             return tile;
         }
         /// <summary>
-        /// Returns the index of the tile at the given grid position
+        /// Returns the index of the tile at the given grid position.
+        /// If no index is found, the vector will be rounded down.
+        /// If no index is found after that, -1 will be returned.
         /// </summary>
-        /// <param name="pos">The grid position of the requested tile (will be rounded if not integer)</param>
+        /// <param name="pos">The grid position of the requested tile </param>
         /// <returns></returns>
-        public int get_by_grid_pos(Vector2 pos)
+        public int get_index_by_grid_pos(Vector2 pos)
         {
-            int _x = (int)System.Math.Round(pos.x);
-            int _y = (int)System.Math.Round(pos.y);
             for(int i = 0; i < tiles.Count; i++)
             {
-                if(tiles[i].get_grid_pos() == new Vector2(_x,_y))
+                if(tiles[i].get_grid_pos() == pos)
+                {
+                    return i;
+                }
+            }
+            int x = (int)System.Math.Floor(pos.x);
+            int y = (int)System.Math.Floor(pos.y);
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                if (tiles[i].get_grid_pos() == new Vector2(x, y))
                 {
                     return i;
                 }
@@ -166,42 +175,127 @@ namespace Assets.scripts
                         uv[i + vertices_amount * 1] = World.get_tri_uv(1);
                         uv[i + vertices_amount * 3] = World.get_rect_uv(2);
                         uv[i + vertices_amount * 4] = World.get_rect_uv(3);
-                        break;                                          
+                        break;
                     case 1://bottom-right                                
                         uv[i + vertices_amount * 1] = World.get_tri_uv(2);
                         uv[i + vertices_amount * 2] = World.get_rect_uv(0);
                         uv[i + vertices_amount * 3] = World.get_rect_uv(3);
-                        break;                                           
+                        break;
                     case 2://mid-right                                   
                         uv[i + vertices_amount * 1] = World.get_tri_uv(2);
                         uv[i + vertices_amount * 2] = World.get_rect_uv(1);
                         uv[i + vertices_amount * 4] = World.get_rect_uv(0);
-                        break;                                           
+                        break;
                     case 3://top-right                                   
                         uv[i + vertices_amount * 1] = World.get_tri_uv(0);
                         uv[i + vertices_amount * 3] = World.get_rect_uv(0);
                         uv[i + vertices_amount * 4] = World.get_rect_uv(1);
-                        break;                                           
+                        break;
                     case 4://top-left                                    
                         uv[i + vertices_amount * 1] = World.get_tri_uv(0);
                         uv[i + vertices_amount * 2] = World.get_rect_uv(2);
                         uv[i + vertices_amount * 3] = World.get_rect_uv(1);
-                        break;                                           
+                        break;
                     case 5://mid-left                                    
                         uv[i + vertices_amount * 1] = World.get_tri_uv(1);
                         uv[i + vertices_amount * 2] = World.get_rect_uv(3);
                         uv[i + vertices_amount * 4] = World.get_rect_uv(2);
                         break;
                 }
-                uv[i + vertices_amount * 0] += tiles[i/6].tex_location * (float)World.tex_scale;
-                uv[i + vertices_amount * 1] += tiles[i/6].tex_location * (float)World.tex_scale;
-                uv[i + vertices_amount * 2] += tiles[i / 6].tex_location * (float)World.tex_scale;
-                uv[i + vertices_amount * 3] += tiles[i / 6].tex_location * (float)World.tex_scale;
-                uv[i + vertices_amount * 4] += tiles[i/6].tex_location * (float)World.tex_scale;
+                //The tile
+                uv[i + vertices_amount * 0] += tiles[i / 6].tex_location * (float)World.tex_scale;
+
+                Vector2 this_pos = tiles[i / 6].get_grid_pos();
+
+                int index = i / 6;
+                int bot = this.get_index_by_grid_pos(this_pos + new Vector2(0, -1));
+                int bot_right = this.get_index_by_grid_pos(this_pos + new Vector2(1, -.5f));
+                int top_right = this.get_index_by_grid_pos(this_pos + new Vector2(1, .5f));
+                int top = this.get_index_by_grid_pos(this_pos + new Vector2(0, 1));
+                int top_left = this.get_index_by_grid_pos(this_pos + new Vector2(-1, .5f));
+                int bot_left = this.get_index_by_grid_pos(this_pos + new Vector2(-1, -.5f));
+
+                if (k == 0 || k == 1)
+                    uv[i + vertices_amount * 3] += get_rect_tex_location(index, bot);
+                else if (k == 3 || k == 4)
+                    uv[i + vertices_amount * 3] += get_rect_tex_location(index, top);
+
+                if (k == 1 || k == 2)
+                    uv[i + vertices_amount * 2] += get_rect_tex_location(index, bot_right);
+                else if (k == 4 || k == 5)
+                    uv[i + vertices_amount * 2] += get_rect_tex_location(index, top_left);
+
+                if (k == 2 || k == 3)
+                    uv[i + vertices_amount * 4] += get_rect_tex_location(index, top_right);
+                else if (k == 5 || k == 0)
+                    uv[i + vertices_amount * 4] += get_rect_tex_location(index, bot_left);
+
+                if (k == 0)
+                {
+                    uv[i + vertices_amount * 1] += get_tri_tex_location(index, bot, bot_left);
+                }
+                if (k == 1)
+                {
+                    uv[i + vertices_amount * 1] += get_tri_tex_location(index, bot, bot_right);
+                }
+                else if (k == 2)
+                {
+                    uv[i + vertices_amount * 1] += get_tri_tex_location(index, top_right, bot_right);
+                }
+                else if (k == 3) 
+                {
+                    uv[i + vertices_amount * 1] += get_tri_tex_location(index, top, top_right);
+                }
+                else if (k == 4)
+                {
+                    uv[i + vertices_amount * 1] += get_tri_tex_location(index, top_left, top);
+                }
+                else if(k ==5)
+                {
+                    uv[i + vertices_amount * 1] += get_tri_tex_location(index, top_left, bot_left);
+                }
             }
             return uv;
         }
 
+        private Vector2 get_rect_tex_location(int index, int dir)
+        {
+            if (dir != -1)
+            {
+                if (tiles[index].tex_prio > tiles[dir].tex_prio)
+                {
+                    return tiles[index].tex_location * (float)World.tex_scale;
+                }
+                else
+                {
+                    return tiles[dir].tex_location * (float)World.tex_scale;
+                }
+            }
+            return new Vector2();
+        }
+        private Vector2 get_tri_tex_location(int index, int dir1, int dir2)
+        {
+            if (dir1 != -1)
+            {
+                if (dir2 != -1)
+                {
+                    if (tiles[index].tex_prio >= tiles[dir1].tex_prio && tiles[index].tex_prio >= tiles[dir2].tex_prio)
+                    {
+                        return tiles[index].tex_location * (float)World.tex_scale;
+                    }
 
+                    else if (tiles[dir2].tex_prio >= tiles[index].tex_prio && tiles[dir2].tex_prio >= tiles[dir1].tex_prio)
+                    {
+                        return tiles[dir2].tex_location * (float)World.tex_scale;
+                    }
+
+                    else if (tiles[dir1].tex_prio >= tiles[index].tex_prio && tiles[dir1].tex_prio >= tiles[dir2].tex_prio)
+                    {
+                        return tiles[dir1].tex_location * (float)World.tex_scale;
+                    }
+                }
+            }
+            return new Vector2();
+        }
     }
 }

@@ -57,29 +57,46 @@ namespace Assets.scripts
             tile_manager.add<Stone>(0, 2, 3);
             tile_manager.add<Stone>(0, 1, 4);
             tile_manager.add<Grassland>(0, 0, 5);
+
             tile_manager.add<Grassland>(1, 0, 0);
             tile_manager.add<Stone>(1, 1, 1);
             tile_manager.add<Stone>(1, 2, 2);
             tile_manager.add<Stone>(1, 3, 3);
             tile_manager.add<Stone>(1, 2, 4);
+
             tile_manager.add<Grassland>(2, 0, 0);
             tile_manager.add<Grassland>(2, 0, 1);
             tile_manager.add<Grassland>(2, 0, 2);
             tile_manager.add<Grassland>(2, 0, 3);
             tile_manager.add<Grassland>(2, 0, 4);
             tile_manager.add<Grassland>(2, 0, 5);
+
             tile_manager.add<Grassland>(3, 0, 0);
-            tile_manager.add<Stone>(3, -1, 1);
-            tile_manager.add<Stone>(3, -1, 2);
+            tile_manager.add<Grassland>(3, 0, 1);
+            tile_manager.add<Grassland>(3, 0, 2);
             tile_manager.add<Grassland>(3, 0, 3);
             tile_manager.add<Grassland>(3, 0, 4);
+
             tile_manager.add<Grassland>(4, 0, 0);
             tile_manager.add<Grassland>(4, 0, 1);
-            tile_manager.add<Grassland>(4, 0, 2);
-            tile_manager.add<Grassland>(4, 0, 3);
+            tile_manager.add<Stone>(4, 0, 2);
+            tile_manager.add<Stone>(4, 0, 3);
             tile_manager.add<Grassland>(4, 0, 4);
             tile_manager.add<Grassland>(4, 0, 5);
-            
+
+            tile_manager.add<Grassland>(5, 0, 0);
+            tile_manager.add<Grassland>(5, 0, 1);
+            tile_manager.add<Desert>(5, 0, 2);
+            tile_manager.add<Grassland>(5, 0, 3);
+            tile_manager.add<Grassland>(5, 0, 4);
+
+            tile_manager.add<Grassland>(6, 0, 0);
+            tile_manager.add<Grassland>(6, 0, 1);
+            tile_manager.add<Grassland>(6, 0, 2);
+            tile_manager.add<Grassland>(6, 0, 3);
+            tile_manager.add<Grassland>(6, 0, 4);
+            tile_manager.add<Grassland>(6, 0, 5);
+
         }
     }
 }

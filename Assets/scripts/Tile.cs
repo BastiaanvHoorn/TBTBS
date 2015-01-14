@@ -33,6 +33,7 @@ namespace Assets.scripts
         /// Returns the bottom left pixel of the textures of this tile
         /// </summary>
         public abstract Vector2 tex_location { get; }
+        public abstract int tex_prio { get; }
         #endregion
 
         public Tile() { }
@@ -77,19 +78,12 @@ namespace Assets.scripts
         protected abstract void on_click();
 
         /// <summary>
-        /// Returns a integer vector2 of the position of this tile relative too all other tiles
+        /// Returns a  vector2 of the position of this tile relative too all other tiles
         /// </summary>
         /// <returns></returns>
         public Vector2 get_grid_pos()
         {
-            if((position.x/reference.World.horizontal_space)%2 == 1)
-            {
-                return new Vector2(position.x / reference.World.horizontal_space, (position.z- reference.World.vertical_offset) / reference.World.vertical_space);
-            }
-            else
-            {
-                return new Vector2(position.x / reference.World.horizontal_space, position.z / reference.World.vertical_space);
-            }
+            return new Vector2((position.x / reference.World.horizontal_space), (position.z / reference.World.vertical_space));
         }
 
         #region render stuff
