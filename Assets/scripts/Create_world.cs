@@ -53,7 +53,7 @@ namespace Assets.scripts
         {
             tile_manager.add<Grassland>(0, 0, 0);
             tile_manager.add<Grassland>(0, 0, 1);
-            tile_manager.add<Stone>(0, 1, 2);
+            tile_manager.add<Grassland>(0, 1, 2);
             tile_manager.add<Stone>(0, 2, 3);
             tile_manager.add<Stone>(0, 1, 4);
             tile_manager.add<Grassland>(0, 0, 5);
@@ -69,8 +69,8 @@ namespace Assets.scripts
             tile_manager.add<Grassland>(2, 0, 4);
             tile_manager.add<Grassland>(2, 0, 5);
             tile_manager.add<Grassland>(3, 0, 0);
-            tile_manager.add<Grassland>(3, -1, 1);
-            //tile_manager.add<Grassland>(3, 0, 2);
+            tile_manager.add<Stone>(3, -1, 1);
+            tile_manager.add<Stone>(3, -1, 2);
             tile_manager.add<Grassland>(3, 0, 3);
             tile_manager.add<Grassland>(3, 0, 4);
             tile_manager.add<Grassland>(4, 0, 0);

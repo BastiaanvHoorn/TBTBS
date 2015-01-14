@@ -49,6 +49,24 @@ namespace Assets.scripts
             tiles.Add(tile);
             return tile;
         }
+        /// <summary>
+        /// Returns the index of the tile at the given grid position
+        /// </summary>
+        /// <param name="pos">The grid position of the requested tile (will be rounded if not integer)</param>
+        /// <returns></returns>
+        public int get_by_grid_pos(Vector2 pos)
+        {
+            int _x = (int)System.Math.Round(pos.x);
+            int _y = (int)System.Math.Round(pos.y);
+            for(int i = 0; i < tiles.Count; i++)
+            {
+                if(tiles[i].get_grid_pos() == new Vector2(_x,_y))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
 
         /// <summary>
         /// Returns if the given tiles are lying next to each other (height doesn't matter)
@@ -77,7 +95,7 @@ namespace Assets.scripts
         /// Gets all vertices of all registered tiles 5 times;
         /// First set of vertices is used for the tile itself
         /// Second set of vertices is used for connection triangles
-        /// Third set of vertices upper left and lower right connection triangles
+        /// Third set of vertices upper left and lower right connection rectangles
         /// Fourth set of vertices top and bottom connection rectangles
         /// Fifth set of vertices upper right and lower left connection rectangles
         /// </summary>
@@ -138,7 +156,10 @@ namespace Assets.scripts
             for (int i = 0; i < vertices_amount; i++)
             {
                 int k = i % 6;
+                //Creates the uv for the tile itself
                 uv[i] = World.get_hex_uv(k);
+
+                //creates the uv for the adjecent triangles and squares
                 switch (k)
                 {
                     case 0://bottom-left
@@ -174,13 +195,13 @@ namespace Assets.scripts
                 }
                 uv[i + vertices_amount * 0] += tiles[i/6].tex_location * (float)World.tex_scale;
                 uv[i + vertices_amount * 1] += tiles[i/6].tex_location * (float)World.tex_scale;
-                uv[i + vertices_amount * 2] += tiles[i/6].tex_location * (float)World.tex_scale;
-                uv[i + vertices_amount * 3] += tiles[i/6].tex_location * (float)World.tex_scale;
+                uv[i + vertices_amount * 2] += tiles[i / 6].tex_location * (float)World.tex_scale;
+                uv[i + vertices_amount * 3] += tiles[i / 6].tex_location * (float)World.tex_scale;
                 uv[i + vertices_amount * 4] += tiles[i/6].tex_location * (float)World.tex_scale;
-
             }
             return uv;
         }
+
 
     }
 }

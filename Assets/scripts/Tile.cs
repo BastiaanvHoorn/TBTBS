@@ -12,7 +12,7 @@ namespace Assets.scripts
     /// </summary>
     public abstract class Tile
     {
-        //Variable declarations
+        #region variable declaration
         /// <summary>
         /// Location of the center of the tile in the playfield
         /// </summary>
@@ -29,8 +29,11 @@ namespace Assets.scripts
         /// Index of this tile, used to number vertices.
         /// </summary>
         public int index { get; set; }
-
+        /// <summary>
+        /// Returns the bottom left pixel of the textures of this tile
+        /// </summary>
         public abstract Vector2 tex_location { get; }
+        #endregion
 
         public Tile() { }
         public void init(Vector3 _position, int _index)
@@ -73,6 +76,10 @@ namespace Assets.scripts
 
         protected abstract void on_click();
 
+        /// <summary>
+        /// Returns a integer vector2 of the position of this tile relative too all other tiles
+        /// </summary>
+        /// <returns></returns>
         public Vector2 get_grid_pos()
         {
             if((position.x/reference.World.horizontal_space)%2 == 1)
@@ -85,7 +92,7 @@ namespace Assets.scripts
             }
         }
 
-        //Render Stuff
+        #region render stuff
         /// <summary>
         /// Generate the vertices for this tile.
         /// Vertices are not numbered and need to be appended to all vertices of preceding tiles
@@ -273,5 +280,6 @@ namespace Assets.scripts
             }
             return new int[] { vertex1 + index, vertex2 + index, vertex3 + index};
         }
+        #endregion
     }
 }
