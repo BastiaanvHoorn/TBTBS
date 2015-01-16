@@ -15,6 +15,7 @@ namespace Assets.scripts
         void Start()
         {
             System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+
             input_manager = new Input_manager(focus, focus_an);
             Mesh mesh = gameObject.AddComponent<MeshFilter>().mesh;
             

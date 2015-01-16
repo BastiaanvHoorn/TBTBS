@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
+using Assets.scripts.tile;
+
 namespace Assets.scripts
 {
     public abstract class Unit
@@ -83,6 +83,31 @@ namespace Assets.scripts
             {
                 this.obj.transform.position = Vector3.MoveTowards(this.obj.transform.position, new Vector3(this.obj.transform.position.x, parrent_tile.position.y, this.obj.transform.position.z), .1f);
             }
+        }
+        public GameObject show_range(ref Tile_manager tiles)
+        {
+            Tile_manager tile_manager = new Tile_manager();
+            Vector2 grid_pos = parrent_tile.get_grid_pos();
+            tile_manager.add<Grassland>((int)grid_pos.x, (int)parrent_tile.position.y, (int)System.Math.Floor(grid_pos.y));
+
+            Vector3[] vertices = tile_manager.get_vertices();
+            List<int> tri = tile_manager.get_tri(vertices);
+            Vector2[] uv = tile_manager.get_uv();
+
+            GameObject obj = new GameObject();
+            Mesh mesh = obj.AddComponent<MeshFilter>().mesh;
+            Renderer renderer = obj.AddComponent<MeshRenderer>();
+
+            mesh.vertices = vertices;
+            mesh.triangles = tri.ToArray();
+            mesh.uv = uv;
+            mesh.RecalculateNormals();
+            mesh.Optimize();
+            renderer.material = new Material(Shader.Find("Transparent/Diffuse"));
+            renderer.material.SetColor("_Color", new Color(.12f, .85f, .12f, .5f));
+            obj.transform.position += new Vector3(0, .01f, 0);
+
+            return obj;
         }
     }
 }
