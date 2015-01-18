@@ -84,15 +84,16 @@ namespace Assets.scripts
                 this.obj.transform.position = Vector3.MoveTowards(this.obj.transform.position, new Vector3(this.obj.transform.position.x, parrent_tile.position.y, this.obj.transform.position.z), .1f);
             }
         }
-        public GameObject show_range(ref Tile_manager tiles)
+        public GameObject show_range(ref Tile_manager world)
         {
-            Tile_manager tile_manager = new Tile_manager();
-            Vector2 grid_pos = parrent_tile.get_grid_pos2();
-            tile_manager.add<Grassland>((int)grid_pos.x, (int)parrent_tile.position.y, (int)System.Math.Floor(grid_pos.y));
+            Vector3 grid_pos = parrent_tile.get_grid_pos3();
+            Tile_manager range = tiles_in_range(ref world);
+            range.add<Grassland>(grid_pos);
 
-            Vector3[] vertices = tile_manager.get_vertices();
-            List<int> tri = tile_manager.get_tri(vertices);
-            Vector2[] uv = tile_manager.get_uv();
+
+            Vector3[] vertices = range.get_vertices();
+            List<int> tri = range.get_tri(vertices);
+            Vector2[] uv = range.get_uv();
 
             GameObject obj = new GameObject();
             Mesh mesh = obj.AddComponent<MeshFilter>().mesh;
@@ -108,6 +109,12 @@ namespace Assets.scripts
             obj.transform.position += new Vector3(0, .01f, 0);
 
             return obj;
+        }
+
+        private Tile_manager tiles_in_range(ref Tile_manager world)
+        {
+            Tile_manager tiles = world.get_adjecent_tiles(parrent_tile);
+            return tiles;
         }
     }
 }

@@ -5,14 +5,18 @@ using System.Text;
 using Assets.scripts;
 using UnityEngine;
 using Assets.scripts.reference;
+using Assets.scripts.tile;
 
 namespace Assets.scripts
 {
     public class Tile_manager
     {
+        #region variable declaration
+
         public List<Tile> tiles { get; private set; }
-        public int count {
-            get{return tiles.Count;}  
+        public int count
+        {
+            get { return tiles.Count; }
         }
         public int vertices_amount;
         public Tile_manager()
@@ -26,14 +30,17 @@ namespace Assets.scripts
             {
                 return tiles[index];
             }
-        }
+        } 
+        #endregion
+        #region adding methods
+
         /// <summary>
         /// Adds a tile to the array of tiles
         /// </summary>
         /// <param name="x">The x-position of the tile in the hex-grid</param>
         /// <param name="y">The height of the tile in the hex-grid</param>
         /// <param name="z">The z-position of the tile in the hex-grid</param>
-        public Tile add<Tile_type>(int x, int y, int z) where Tile_type:Tile , new()
+        public Tile add<Tile_type>(int x, int y, int z) where Tile_type : Tile, new()
         {
             Tile_type tile = new Tile_type();
             Vector3 _position;
@@ -49,6 +56,17 @@ namespace Assets.scripts
             tiles.Add(tile);
             return tile;
         }
+
+        public Tile add<Tile_type>(Vector3 pos) where Tile_type : Tile, new()
+        {
+            return add<Tile_type>((int)pos.x, (int)pos.y, (int)pos.z);
+        }
+
+        public void add_range(IEnumerable<Tile> _tiles)
+        {
+            tiles.AddRange(_tiles);
+        }
+        #endregion
         /// <summary>
         /// Returns the index of the tile at the given grid position.
         /// If no index is found, the vector will be rounded down.
@@ -58,9 +76,9 @@ namespace Assets.scripts
         /// <returns></returns>
         public int get_index_by_grid_pos(Vector2 pos)
         {
-            for(int i = 0; i < tiles.Count; i++)
+            for (int i = 0; i < tiles.Count; i++)
             {
-                if(tiles[i].get_grid_pos2() == pos)
+                if (tiles[i].get_grid_pos2() == pos)
                 {
                     return i;
                 }
@@ -69,7 +87,7 @@ namespace Assets.scripts
             int y = (int)System.Math.Floor(pos.y);
             for (int i = 0; i < tiles.Count; i++)
             {
-                if (tiles[i].get_grid_pos2() == new Vector2(x, y))
+                if (tiles[i].get_grid_pos2(true) == new Vector2(x, y))
                 {
                     return i;
                 }
@@ -85,7 +103,19 @@ namespace Assets.scripts
         /// <param name="tile_2">Position of the second tile</param>
         static public bool is_adjecent(Vector3 tile_1, Vector3 tile_2)
         {
-            return (Vector2.Distance(Util.v3_to_v2(tile_1,"y"), Util.v3_to_v2(tile_2,"y")) <= 5);
+            return (Vector2.Distance(Util.v3_to_v2(tile_1, "y"), Util.v3_to_v2(tile_2, "y")) <= 5);
+        } 
+
+        public Tile_manager get_adjecent_tiles(Tile center)
+        {
+            Tile_manager in_range_tiles = new Tile_manager();
+            Vector2 grid_pos = center.get_grid_pos2(true) + new Vector2(0,1);
+            int index = get_index_by_grid_pos(grid_pos);
+            //tile.Test tile = new tile.Test();
+            in_range_tiles.add<Test>(tiles[index].get_grid_pos3(true));
+
+            //in_range_tiles.Add(tiles[index]);
+            return in_range_tiles;
         }
         /// <summary>
         /// Returns if the given tiles are lying next to each other (height doesn't matter)

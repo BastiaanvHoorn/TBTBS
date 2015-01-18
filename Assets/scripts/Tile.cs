@@ -81,11 +81,27 @@ namespace Assets.scripts
         /// Returns a  vector2 of the position of this tile relative too all other tiles
         /// </summary>
         /// <returns></returns>
-        public Vector2 get_grid_pos2()
+        public Vector2 get_grid_pos2(bool rounded = false)
         {
             float x = (float)System.Math.Round(position.x / reference.World.horizontal_space);
             float y = (position.z / reference.World.vertical_space);
+            if (rounded)
+            {
+                y = (float)System.Math.Floor(y);
+            }
             return new Vector2(x, y);
+        }
+
+        public Vector3 get_grid_pos3(bool rounded = false)
+        {
+            float x = (float)System.Math.Round(position.x / reference.World.horizontal_space);
+            float y = position.y;
+            float z = (position.z / reference.World.vertical_space);
+            if (rounded)
+            {
+                z = (float)System.Math.Floor(z);
+            }
+            return new Vector3(x, y, z);
         }
 
         #region render stuff
