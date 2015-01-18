@@ -19,6 +19,11 @@ tbtbs-csharp.sln.ide/
 *.user
 *.unityproj
 *.booproj
+Build/
+Assets/UnityVS/
+tbtbs-csharp.sln.ide/
+UnityVS.tbtbs.sln.ide/
+
 
 # ============ #
 # OS generated #
@@ -40,3 +45,4 @@ Thumbs.db
 # 3DS Max #
 # ======= #
 3ds_max/
+Assets/UnityVS.meta

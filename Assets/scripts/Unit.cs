@@ -87,7 +87,7 @@ namespace Assets.scripts
         public GameObject show_range(ref Tile_manager tiles)
         {
             Tile_manager tile_manager = new Tile_manager();
-            Vector2 grid_pos = parrent_tile.get_grid_pos();
+            Vector2 grid_pos = parrent_tile.get_grid_pos2();
             tile_manager.add<Grassland>((int)grid_pos.x, (int)parrent_tile.position.y, (int)System.Math.Floor(grid_pos.y));
 
             Vector3[] vertices = tile_manager.get_vertices();

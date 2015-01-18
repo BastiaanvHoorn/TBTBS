@@ -17,48 +17,42 @@ namespace Assets.scripts
 
         public void process_input(ref Unit_manager unit_manager, ref Tile_manager tile_manager)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
             {
+                Object.Destroy(current_range);
                 for (int i = 0; i < tile_manager.count; i++)
                 {
                     if (tile_manager[i].check_click(Input.mousePosition, Camera.main))
                     {
                         Vector3 tile_pos = tile_manager[i].position;
                         move_focus(tile_pos);
-                        for (int j = 0; j < unit_manager.count; j++)
+                        if (Input.GetMouseButtonDown(0))
                         {
-                            if (unit_manager[j].obj.transform.position == tile_pos)
+                            for (int j = 0; j < unit_manager.count; j++)
                             {
-                                //When a unit is found at the clicked tile, switch the selected unit and exit all loops
-                                selected_unit = j;
-                                Object.Destroy(current_range);
-                                current_range = unit_manager[selected_unit].show_range(ref tile_manager);
-                                goto Done;
+                                if (unit_manager[j].obj.transform.position == tile_pos)
+                                {
+                                    //When a unit is found at the clicked tile, switch the selected unit and exit all loops
+                                    selected_unit = j;
+                                    current_range = unit_manager[selected_unit].show_range(ref tile_manager);
+                                    goto Done;
+                                }
                             }
-                        }
 
-                        //If no unit is found at the clicked tile, move the selected unit to this tile
-                        if (selected_unit != -1)
-                        {
-                            unit_manager[selected_unit].move(tile_manager[i], unit_manager);
+                            //If no unit is found at the clicked tile, move the selected unit to this tile
+                            if (selected_unit != -1)
+                            {
+                                unit_manager[selected_unit].move(tile_manager[i], unit_manager);
+                            }
+                            goto Done;
                         }
-                        goto Done;
+                        else
+                        {
+                            selected_unit = -1;
+                        }
                     }
                 }
                 Done:;
-            }
-            else if(Input.GetMouseButtonDown(1))
-            {
-                for (int i = 0; i < tile_manager.count; i++)
-                {
-                    if (tile_manager[i].check_click(Input.mousePosition, Camera.main))
-                    {
-                        Object.Destroy(current_range);
-                        Vector3 tile_pos = tile_manager[i].position;
-                        move_focus(tile_pos);
-                    }
-                }
-                selected_unit = -1;
             }
         }
         private void move_focus(Vector3 pos)

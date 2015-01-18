@@ -60,7 +60,7 @@ namespace Assets.scripts
         {
             for(int i = 0; i < tiles.Count; i++)
             {
-                if(tiles[i].get_grid_pos() == pos)
+                if(tiles[i].get_grid_pos2() == pos)
                 {
                     return i;
                 }
@@ -69,7 +69,7 @@ namespace Assets.scripts
             int y = (int)System.Math.Floor(pos.y);
             for (int i = 0; i < tiles.Count; i++)
             {
-                if (tiles[i].get_grid_pos() == new Vector2(x, y))
+                if (tiles[i].get_grid_pos2() == new Vector2(x, y))
                 {
                     return i;
                 }
@@ -98,6 +98,7 @@ namespace Assets.scripts
             return (Vector2.Distance(Util.v3_to_v2(tiles[tile_1].position), Util.v3_to_v2(tiles[tile_2].position)) <= 5);
         }
 
+        #region render
         //Render stuff
 
         /// <summary>
@@ -155,12 +156,14 @@ namespace Assets.scripts
             return tri;
         }
 
+
+        #region uv
         /// <summary>
         /// Gets all uv coordinates for the mesh
         /// </summary>
         public Vector2[] get_uv()
         {
-            Vector2[] uv = new Vector2[vertices_amount*5];
+            Vector2[] uv = new Vector2[vertices_amount * 5];
             //Loops through one set of vertices
             for (int i = 0; i < vertices_amount; i++)
             {
@@ -205,7 +208,7 @@ namespace Assets.scripts
                 //The tile
                 uv[i + vertices_amount * 0] += tiles[i / 6].tex_location * (float)World.tex_scale;
 
-                Vector2 this_pos = tiles[i / 6].get_grid_pos();
+                Vector2 this_pos = tiles[i / 6].get_grid_pos2();
 
                 int index = i / 6;
                 int bot = this.get_index_by_grid_pos(this_pos + new Vector2(0, -1));
@@ -242,7 +245,7 @@ namespace Assets.scripts
                 {
                     uv[i + vertices_amount * 1] += get_tri_tex_location(index, top_right, bot_right);
                 }
-                else if (k == 3) 
+                else if (k == 3)
                 {
                     uv[i + vertices_amount * 1] += get_tri_tex_location(index, top, top_right);
                 }
@@ -250,7 +253,7 @@ namespace Assets.scripts
                 {
                     uv[i + vertices_amount * 1] += get_tri_tex_location(index, top_left, top);
                 }
-                else if(k ==5)
+                else if (k == 5)
                 {
                     uv[i + vertices_amount * 1] += get_tri_tex_location(index, top_left, bot_left);
                 }
@@ -297,5 +300,7 @@ namespace Assets.scripts
             }
             return new Vector2();
         }
+        #endregion 
+        #endregion
     }
 }

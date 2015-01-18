@@ -81,9 +81,11 @@ namespace Assets.scripts
         /// Returns a  vector2 of the position of this tile relative too all other tiles
         /// </summary>
         /// <returns></returns>
-        public Vector2 get_grid_pos()
+        public Vector2 get_grid_pos2()
         {
-            return new Vector2((position.x / reference.World.horizontal_space), (position.z / reference.World.vertical_space));
+            float x = (float)System.Math.Round(position.x / reference.World.horizontal_space);
+            float y = (position.z / reference.World.vertical_space);
+            return new Vector2(x, y);
         }
 
         #region render stuff
