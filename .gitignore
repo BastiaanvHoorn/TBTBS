@@ -10,6 +10,7 @@ Library/
 ExportedObj/
 obj/
 tbtbs-csharp.sln.ide/
+Build/
 *.svd
 *.userprefs
 /*.csproj
@@ -19,7 +20,6 @@ tbtbs-csharp.sln.ide/
 *.user
 *.unityproj
 *.booproj
-Build/
 Assets/UnityVS/
 tbtbs-csharp.sln.ide/
 UnityVS.tbtbs.sln.ide/
