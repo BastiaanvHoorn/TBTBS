@@ -110,10 +110,17 @@ namespace Assets.scripts
         {
             Tile_manager in_range_tiles = new Tile_manager();
             Vector2 grid_pos = center.get_grid_pos2(true) + new Vector2(0,1);
-            int index = get_index_by_grid_pos(grid_pos);
-            //tile.Test tile = new tile.Test();
-            in_range_tiles.add<Test>(tiles[index].get_grid_pos3(true));
-
+            //int index = get_index_by_grid_pos(grid_pos);
+            //in_range_tiles.add<Test>(tiles[index].get_grid_pos3(true));
+            List<int> index = new List<int>();
+            for(int i = 0; i< count; i++)
+            {
+                if(is_adjecent(center.index, i))
+                {
+                    Debug.Log("added tile " + i);
+                    in_range_tiles.add<Test>(tiles[i].get_grid_pos3(true));
+                }
+            }
             //in_range_tiles.Add(tiles[index]);
             return in_range_tiles;
         }
@@ -125,7 +132,10 @@ namespace Assets.scripts
         /// <param name="tile_2">index of the second tile</param>
         public bool is_adjecent(int tile_1, int tile_2)
         {
-            return (Vector2.Distance(Util.v3_to_v2(tiles[tile_1].position), Util.v3_to_v2(tiles[tile_2].position)) <= 5);
+            Vector2 pos1 = Util.v3_to_v2(tiles[tile_1].position,"y");
+            Vector2 pos2 = Util.v3_to_v2(tiles[tile_2].position,"y");
+            bool _return = (Vector2.Distance(pos1, pos2) <= 5 && tile_1 != tile_2);
+            return _return;
         }
 
         #region render

@@ -43,8 +43,8 @@ namespace Assets.scripts
                             if (selected_unit != -1)
                             {
                                 unit_manager[selected_unit].move(tile_manager[i], unit_manager);
-                                selected_unit = -1;
                             }
+                                selected_unit = -1;
                             goto Done;
                         }
                         else
