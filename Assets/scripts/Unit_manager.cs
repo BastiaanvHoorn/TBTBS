@@ -9,7 +9,7 @@ namespace Assets.scripts
     public class Unit_manager
     {
         public List<Unit> units { get; private set; }
-
+        public Color color { get; set; }
         public int count
         {
             get { return units.Count; }
@@ -28,6 +28,8 @@ namespace Assets.scripts
         {
             Unit_type unit = new Unit_type();
             units.Add(unit);
+            unit.color = this.color;
+            unit.spawn();
             unit.move(tile, this, true);
             Debug.Log("Spawning " + unit.to_string());
             return unit;

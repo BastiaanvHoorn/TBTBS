@@ -11,14 +11,13 @@ namespace Assets.scripts
         public GameObject obj { get; set; }
         public abstract String model_name { get; }
         public abstract string name { get; }
-
+        public Color color { get; set; }
         public Unit()
         {
-            spawn();
         }
 
         //Create the actual gameobject in the scene
-        private void spawn()
+        public void spawn()
         {
             obj = new GameObject("soldiers");
 
@@ -36,7 +35,8 @@ namespace Assets.scripts
         {
             GameObject unit = new GameObject("soldier");
             unit.AddComponent<MeshFilter>().mesh = Resources.LoadAssetAtPath<Mesh>("Assets/meshes/test_unit.3ds");
-            unit.AddComponent<MeshRenderer>().material = new Material(Shader.Find("Diffuse"));
+            Material material = unit.AddComponent<MeshRenderer>().material = new Material(Shader.Find("Diffuse"));
+            material.color = this.color;
             unit.transform.position = position;
             return unit;
         }

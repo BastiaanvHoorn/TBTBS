@@ -117,7 +117,6 @@ namespace Assets.scripts
             {
                 if(is_adjecent(center.index, i))
                 {
-                    Debug.Log("added tile " + i);
                     in_range_tiles.add<Test>(tiles[i].get_grid_pos3(true));
                 }
             }

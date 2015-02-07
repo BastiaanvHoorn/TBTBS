@@ -6,12 +6,15 @@ namespace Assets.scripts
 {
     public class Create_world : MonoBehaviour
     {
-        Unit_manager unit_manager = new Unit_manager();
+        Unit_manager blue = new Unit_manager();
+        Unit_manager red = new Unit_manager();
         Tile_manager tile_manager = new Tile_manager();
         Input_manager input_manager;
         public GameObject focus;
         public Animator focus_an;
         public Texture texture;
+        enum player { Blue, Red};
+        private player current_player = player.Blue;
         void Start()
         {
             System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
@@ -33,8 +36,10 @@ namespace Assets.scripts
             renderer.material.SetColor("_Color", new Color(.7f, .7f, .7f));
             renderer.material.SetTexture("_MainTex", texture);
 
-            unit_manager.add<unit.Test>(tile_manager[0]);
-            unit_manager.add<unit.Test>(tile_manager[8]);
+            blue.color = Color.blue;
+            red.color = Color.red;
+            blue.add<unit.Test>(tile_manager[0]);
+            red.add<unit.Test>(tile_manager[8]);
 
             Debug.Log("Loaded world in " + sw.ElapsedMilliseconds + " ms");
             sw.Stop();
@@ -44,11 +49,39 @@ namespace Assets.scripts
 
         void Update()
         {
-            input_manager.process_input(ref unit_manager, ref tile_manager);
-            unit_manager.move_units();          
+            if(current_player == player.Blue)
+            {
+                input_manager.process_input(ref blue, ref tile_manager);
+            }
+            else
+            {
+                input_manager.process_input(ref red, ref tile_manager);
+            }
+            blue.move_units();
+            red.move_units();          
         }
 
+        public void switch_player(GameObject button)
+        {
 
+            if (current_player == player.Blue)
+            {
+                current_player = player.Red;
+                button.GetComponent<UnityEngine.UI.Image>().color = Color.red;
+                Debug.Log("switched to red");
+            }
+            else
+            {
+                current_player = player.Blue;
+                button.GetComponent<UnityEngine.UI.Image>().color = Color.blue;
+                Debug.Log("switched to blue");
+            }
+        }
+
+        public void end_turn()
+        {
+
+        }
 
         private void add_tiles(ref Tile_manager tile_manager)
         {
