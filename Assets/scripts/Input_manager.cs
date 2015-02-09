@@ -15,7 +15,7 @@ namespace Assets.scripts
             focus_an = _focus_an;
         }
 
-        public void process_input(ref Unit_manager unit_manager, ref Tile_manager tile_manager)
+        public void process_input(ref Unit_manager unit_manager, ref Tile_manager tile_manager, Player player)
         {
             if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
             {
@@ -30,7 +30,7 @@ namespace Assets.scripts
                         {
                             for (int j = 0; j < unit_manager.count; j++)
                             {
-                                if (unit_manager[j].obj.transform.position == tile_pos)
+                                if (unit_manager[j].obj.transform.position == tile_pos && unit_manager[j].player == player)
                                 {
                                     //When a unit is found at the clicked tile, switch the selected unit and exit all loops
                                     selected_unit = j;

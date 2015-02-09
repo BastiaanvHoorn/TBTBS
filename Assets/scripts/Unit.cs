@@ -11,7 +11,7 @@ namespace Assets.scripts
         public GameObject obj { get; set; }
         public abstract String model_name { get; }
         public abstract string name { get; }
-        public Color color { get; set; }
+        public Player player { get; set; }
         public Unit()
         {
         }
@@ -36,7 +36,14 @@ namespace Assets.scripts
             GameObject unit = new GameObject("soldier");
             unit.AddComponent<MeshFilter>().mesh = Resources.LoadAssetAtPath<Mesh>("Assets/meshes/test_unit.3ds");
             Material material = unit.AddComponent<MeshRenderer>().material = new Material(Shader.Find("Diffuse"));
-            material.color = this.color;
+            if(this.player == Player.Blue)
+            {
+                material.color = reference.Player_color.blue;
+            }
+            else
+            {
+                material.color = reference.Player_color.red;
+            }
             unit.transform.position = position;
             return unit;
         }

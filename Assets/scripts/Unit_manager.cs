@@ -9,7 +9,6 @@ namespace Assets.scripts
     public class Unit_manager
     {
         public List<Unit> units { get; private set; }
-        public Color color { get; set; }
         public int count
         {
             get { return units.Count; }
@@ -24,11 +23,11 @@ namespace Assets.scripts
             get { return units[index]; }
         }
 
-        public Unit add<Unit_type>(Tile tile) where Unit_type :Unit, new()
+        public Unit add<Unit_type>(Tile tile, Player player) where Unit_type :Unit, new()
         {
             Unit_type unit = new Unit_type();
             units.Add(unit);
-            unit.color = this.color;
+            unit.player = player;
             unit.spawn();
             unit.move(tile, this, true);
             Debug.Log("Spawning " + unit.to_string());
