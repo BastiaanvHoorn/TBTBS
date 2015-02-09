@@ -12,6 +12,7 @@ namespace Assets.scripts
         public abstract String model_name { get; }
         public abstract string name { get; }
         public Player player { get; set; }
+        public bool can_move { get; set; }
         public Unit()
         {
         }
@@ -55,41 +56,51 @@ namespace Assets.scripts
         /// Moves this unit to the target tile if possible
         /// </summary>
         /// <param name="target">The tile that the unit will try to move to</param>
+        /// <param name="unit_manager">The unit_manager that contains all the units</param>
+        /// <param name="spawn">If this move command spawns the unit. This will bypass the check if the target is actually in range</param>
         /// <returns>Returns true if succeeded, returns false if failed</returns>
-        public virtual bool move(Tile target, Unit_manager unit_manager, bool spawn)
+        public virtual bool move(Tile target, Unit_manager unit_manager, bool spawn = false)
         {
             if (Tile_manager.is_adjecent(this.obj.transform.position, target.position) || spawn)
             {
-                if (unit_manager.is_tile_empty(target))
+                bool is_empty = unit_manager.is_tile_empty(target);
+                if (is_empty)
                 {
-                    this.parrent_tile = target;
-                    if (spawn)
+                    if (can_move || spawn)
                     {
-                        this.obj.transform.position = target.position;
+                        if(!spawn)
+                        {
+                            can_move = false;
+                        }
+                        else
+                        {
+                            this.obj.transform.position = target.position;
+                        }
+                        this.parrent_tile = target;
+                        return true; 
                     }
-                    return true;
                 }
             }
             return false;
         }
-        public virtual bool move(Tile target, Unit_manager unit_manager)
-        {
-            return move(target, unit_manager, false);
-        }
+
         public void move_towards()
         {
-            if (this.obj.transform.position.y == parrent_tile.position.y|| Util.v3_to_v2(this.obj.transform.position, "y") == Util.v3_to_v2(parrent_tile.position, "y"))
+            Vector3 parrent_pos = parrent_tile.position;
+            Vector3 this_pos = this.obj.transform.position;
+            if (this_pos.y == parrent_pos.y || Util.v3_to_v2(this_pos, "y") == Util.v3_to_v2(parrent_pos, "y"))
             {
-                this.obj.transform.position = Vector3.MoveTowards(this.obj.transform.position, parrent_tile.position, .1f);
+                this_pos = Vector3.MoveTowards(this_pos, parrent_pos, .1f);
             }
-            else if(this.obj.transform.position.y >= parrent_tile.position.y)
+            else if(this_pos.y >= parrent_pos.y)
             {
-                this.obj.transform.position = Vector3.MoveTowards(this.obj.transform.position, new Vector3(parrent_tile.position.x, this.obj.transform.position.y, parrent_tile.position.z), .1f);
+                this_pos = Vector3.MoveTowards(this_pos, new Vector3(parrent_pos.x, this_pos.y, parrent_pos.z), .1f);
             }
             else
             {
-                this.obj.transform.position = Vector3.MoveTowards(this.obj.transform.position, new Vector3(this.obj.transform.position.x, parrent_tile.position.y, this.obj.transform.position.z), .1f);
+                this_pos = Vector3.MoveTowards(this_pos, new Vector3(this_pos.x, parrent_pos.y, this_pos.z), .1f);
             }
+            this.obj.transform.position = this_pos;
         }
         public GameObject show_range(ref Tile_manager world)
         {
@@ -112,7 +123,14 @@ namespace Assets.scripts
             mesh.RecalculateNormals();
             mesh.Optimize();
             renderer.material = new Material(Shader.Find("Transparent/Diffuse"));
-            renderer.material.SetColor("_Color", new Color(.12f, .85f, .12f, .5f));
+            if (can_move)
+            {
+                renderer.material.SetColor("_Color", new Color(.12f, .85f, .12f, .5f));
+            }
+            else
+            {
+                renderer.material.SetColor("_Color", new Color(.85f, .08f, .08f, .5f));
+            }
             obj.transform.position += new Vector3(0, .01f, 0);
 
             return obj;

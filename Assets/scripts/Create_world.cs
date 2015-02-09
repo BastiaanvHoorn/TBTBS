@@ -11,6 +11,7 @@ namespace Assets.scripts
         Tile_manager tile_manager = new Tile_manager();
         Input_manager input_manager;
 
+        public int turns = 0;
         public GameObject focus;
         public Animator focus_an;
         public Texture texture;
@@ -54,7 +55,7 @@ namespace Assets.scripts
 
         public void switch_player(GameObject button)
         {
-
+            
             if (current_player == Player.Blue)
             {
                 current_player = Player.Red;
@@ -71,7 +72,12 @@ namespace Assets.scripts
 
         public void end_turn()
         {
-
+            turns++;
+            for(int i = 0; i < unit_manager.count; i++)
+            {
+                unit_manager[i].can_move = true;
+            }
+            Debug.Log("turn " + turns + " has been ended");
         }
 
         private void add_tiles(ref Tile_manager tile_manager)

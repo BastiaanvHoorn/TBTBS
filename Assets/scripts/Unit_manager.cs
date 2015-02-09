@@ -29,6 +29,7 @@ namespace Assets.scripts
             units.Add(unit);
             unit.player = player;
             unit.spawn();
+            unit.can_move = true;
             unit.move(tile, this, true);
             Debug.Log("Spawning " + unit.to_string());
             return unit;
