@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Main_menu : MonoBehaviour {
-
-	public void start_game()
+namespace Assets.scripts.attached
+{
+    public class Main_menu : MonoBehaviour
     {
-        Application.LoadLevel("world");
+
+        public void start_game()
+        {
+            Application.LoadLevel("world");
+        }
+
     }
 }
