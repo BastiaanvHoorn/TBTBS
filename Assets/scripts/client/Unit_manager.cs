@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.scripts
+namespace Assets.scripts.client
 {
     public class Unit_manager
     {

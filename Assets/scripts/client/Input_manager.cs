@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-namespace Assets.scripts
+namespace Assets.scripts.client
 {
     //THIS CLASS DOES NOT HANDLE THE CAMERA CONTROLS
     //THE CAMERA CONTROLS ARE HANDELED IN "attached/Camera_controller.cs"

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Assets.scripts;
 using UnityEngine;
-using Assets.scripts.reference;
-using Assets.scripts.tile;
+using Assets.scripts.client.reference;
+using Assets.scripts.client.tile;
 
-namespace Assets.scripts
+namespace Assets.scripts.client
 {
     public class Tile_manager
     {

@@ -133,17 +133,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor
-    eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra
-    quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque
-    rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper
-    ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum
-    rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam
-    quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio
-    et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam
-    quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla
-    mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum
-    sodales, augue velit cursus nunc
+  m_Text: 'Hello, the server hasn''t started yet.
+
+'
 --- !u!222 &226037147
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -754,18 +746,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "m felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus
-    elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor
-    eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra
-    quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque
-    rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper
-    ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum
-    rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam
-    quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio
-    et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam
-    quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla
-    mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum
-    sodales, augue velit cursus nunc,\r\n\r\n"
+  m_Text: 
 --- !u!222 &1114097724
 CanvasRenderer:
   m_ObjectHideFlags: 0

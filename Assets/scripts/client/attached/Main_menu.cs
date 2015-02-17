@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Assets.scripts.attached
+namespace Assets.scripts.client.attached
 {
     public class Main_menu : MonoBehaviour
     {

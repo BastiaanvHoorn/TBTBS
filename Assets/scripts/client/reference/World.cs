@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using Assets.scripts.reference;
 
-namespace Assets.scripts.reference
+namespace Assets.scripts.client.reference
 {
     class World
     {

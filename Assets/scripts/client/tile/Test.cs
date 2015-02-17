@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.scripts.tile
+namespace Assets.scripts.client.tile
 {
     class Test : Tile
     {
