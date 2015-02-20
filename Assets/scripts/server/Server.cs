@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.scripts.client
 {
@@ -21,32 +22,58 @@ namespace Assets.scripts.client
         }
 
         public int players;
-        public int port;
         public int disconnect_timeout;
-        public UnityEngine.UI.Text connected_clients;
-        public UnityEngine.UI.Text log;
-        public UnityEngine.UI.InputField server_name_input;
-        public UnityEngine.UI.Text server_name;
-        public UnityEngine.UI.Text start_button_text;
-        private string name;
+        public Text connected_clients;
+        public Text log;
+        public InputField server_name_input;
+        public InputField port_input;
+        public Button start_button;
+        private string server_name;
         private List<client> clients = new List<client>();
+        private bool started = false;
         #endregion
 
 
         private void start_server()
         {
-            if (server_name.text != "")
+           
+            string server_name_text = server_name_input.text;
+            int port = (port_input.text != "") ? Convert.ToInt32(port_input.text) : 0;
+            if (server_name_text != "" && port > 10000)
             {
-                name = server_name.text;
+                name = server_name_text;
                 Network.InitializeServer(players, port, !Network.HavePublicAddress());
-                start_button_text.text = "Stop Server";
-                print_log("starting server with the name: " + name);
+                start_button.GetComponentInChildren<Text>().text = "Stop Server";
+                print_log("starting server with the name: " + name + " on port: " + port);
                 MasterServer.RegisterHost("BassieTBTBS", name, "Still needs a good name");
-                server_name_input.interactable = false;
+                toggle_started();
             }
             else
             {
-                print_log("Please input a server name", Messagetype.error);
+                print_log("Please input a server name and a port that is bigger then 10000", Messagetype.error);
+            }
+        }
+        private void stop_server()
+        {
+            Network.Disconnect(disconnect_timeout);
+            start_button.GetComponentInChildren<Text>().text = "Start Server";
+            print_log("Stopped the server");
+            server_name_input.interactable = true;
+            toggle_started();
+        }
+        private void toggle_started()
+        {
+            if (!started)
+            {
+                server_name_input.interactable = false;
+                port_input.interactable = false;
+                started = true;
+            }
+            else
+            {
+                server_name_input.interactable = true;
+                port_input.interactable = true;
+                started = false;
             }
         }
 
@@ -65,13 +92,7 @@ namespace Assets.scripts.client
                     break;
             }
         }
-        private void stop_server()
-        {
-            Network.Disconnect(disconnect_timeout);
-            start_button_text.text = "Start Server";
-            print_log("Stopped the server");
-            server_name_input.interactable = true;
-        }
+
 
         //Gui calls
         #region MyRegion
