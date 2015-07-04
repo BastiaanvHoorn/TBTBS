@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.scripts.client.tile
+namespace Assets.scripts.tile
 {
     class Desert : Tile
     {

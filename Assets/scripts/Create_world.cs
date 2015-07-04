@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Assets.scripts.client.tile;
+using Assets.scripts.tile;
 using UnityEngine;
 
-namespace Assets.scripts.client
+namespace Assets.scripts
 {
     public enum Player { Blue, Red };
     public class Create_world : MonoBehaviour
@@ -36,7 +36,7 @@ namespace Assets.scripts.client
             mesh.Optimize();
             renderer.material.SetColor("_Color", new Color(.7f, .7f, .7f));
             renderer.material.SetTexture("_MainTex", texture);
-            
+
             unit_manager.add<unit.Test>(tile_manager[0], Player.Blue);
             unit_manager.add<unit.Test>(tile_manager[8], Player.Red);
 

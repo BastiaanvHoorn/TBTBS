@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Assets.scripts.client.tile;
+using Assets.scripts.tile;
 
-namespace Assets.scripts.client
+namespace Assets.scripts
 {
     public abstract class Unit
     {

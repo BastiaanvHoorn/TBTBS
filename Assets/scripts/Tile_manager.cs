@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Assets.scripts;
 using UnityEngine;
-using Assets.scripts.client.reference;
-using Assets.scripts.client.tile;
+using Assets.scripts.reference;
+using Assets.scripts.tile;
 
-namespace Assets.scripts.client
+namespace Assets.scripts
 {
     public class Tile_manager
     {
@@ -109,6 +109,10 @@ namespace Assets.scripts.client
         public Tile_manager get_adjecent_tiles(Tile center)
         {
             Tile_manager in_range_tiles = new Tile_manager();
+            Vector2 grid_pos = center.get_grid_pos2(true) + new Vector2(0,1);
+            //int index = get_index_by_grid_pos(grid_pos);
+            //in_range_tiles.add<Test>(tiles[index].get_grid_pos3(true));
+            List<int> index = new List<int>();
             for(int i = 0; i< count; i++)
             {
                 if(is_adjecent(center.index, i))

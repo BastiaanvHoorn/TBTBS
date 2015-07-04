@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using Assets.scripts;
 
-namespace Assets.scripts.client
+namespace Assets.scripts
 {
     /// <summary>
     /// Playfield is built up from tiles

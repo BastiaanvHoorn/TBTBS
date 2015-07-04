@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.scripts.client.unit
+namespace Assets.scripts.unit
 {
     class Test:Unit
     {
