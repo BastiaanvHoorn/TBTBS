@@ -34,8 +34,8 @@ namespace Assets.scripts
             mesh.uv = uv;
             mesh.RecalculateNormals();
             mesh.Optimize();
-            renderer.material.SetColor("_Color", new Color(.7f, .7f, .7f));
-            renderer.material.SetTexture("_MainTex", texture);
+            GetComponent<Renderer>().material.SetColor("_Color", new Color(.7f, .7f, .7f));
+            GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
 
             unit_manager.add<unit.Test>(tile_manager[0], Player.Blue);
             unit_manager.add<unit.Test>(tile_manager[8], Player.Red);

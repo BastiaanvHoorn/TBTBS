@@ -10,6 +10,6 @@ public class Pathing_stripes : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        renderer.material.SetTextureOffset("_MainTex", renderer.material.GetTextureOffset("_MainTex") + new Vector2(0.01f,0));
+        GetComponent<Renderer>().material.SetTextureOffset("_MainTex", GetComponent<Renderer>().material.GetTextureOffset("_MainTex") + new Vector2(0.01f,0));
 	}
 }

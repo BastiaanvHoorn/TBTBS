@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using Assets.scripts.tile;
 
 namespace Assets.scripts
@@ -35,7 +36,8 @@ namespace Assets.scripts
         private GameObject add_unit(Vector3 position)
         {
             GameObject unit = new GameObject("soldier");
-            unit.AddComponent<MeshFilter>().mesh = Resources.LoadAssetAtPath<Mesh>("Assets/meshes/test_unit.3ds");
+            
+            unit.AddComponent<MeshFilter>().mesh = AssetDatabase.LoadAssetAtPath<Mesh>("Assets/meshes/test_unit.3ds");
             Material material = unit.AddComponent<MeshRenderer>().material = new Material(Shader.Find("Diffuse"));
             if(this.player == Player.Blue)
             {
