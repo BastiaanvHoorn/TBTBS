@@ -43,16 +43,8 @@ namespace Assets.scripts
         public Tile add<Tile_type>(int x, int y, int z) where Tile_type : Tile, new()
         {
             Tile_type tile = new Tile_type();
-            Vector3 _position;
-            if (x % 2 == 1)
-            {
-                _position = new Vector3(x * reference.World.horizontal_space, y, z * reference.World.vertical_space + reference.World.vertical_offset);
-            }
-            else
-            {
-                _position = new Vector3(x * reference.World.horizontal_space, y, z * reference.World.vertical_space);
-            }
-            tile.init(_position, count);
+            
+            tile.init(x, y, z, count);
             tiles.Add(tile);
             return tile;
         }

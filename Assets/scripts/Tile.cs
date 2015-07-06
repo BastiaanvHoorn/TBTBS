@@ -16,7 +16,11 @@ namespace Assets.scripts
         /// <summary>
         /// Location of the center of the tile in the playfield
         /// </summary>
-        public Vector3 position { get; set; }
+        public Vector3 position { get; private set; }
+        public Vector3 position_world { get; private set; }
+        public Vector4 position_cube { get; private set; }
+        public Vector3 position_axial { get; private set; }
+        public Vector3 position_offset { get; private set; }
         /// <summary>
         /// All vertices for this tile (total of 6)
         /// </summary>
@@ -37,13 +41,59 @@ namespace Assets.scripts
         #endregion
 
         public Tile() { }
-        public void init(Vector3 _position, int _index)
+        //TODO make the z the height of the tile;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y">height</param>
+        /// <param name="z"></param>
+        /// <param name="_index"></param>
+        public void init(int x, int y, int z, int _index)
         {
-            position = _position;
+            set_positions(x, y, z);
+           
             index = _index;
 
-            add_vertices(_position);
+            add_vertices();
             add_triangles(_index);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        private void set_positions(int x, int y, int z)
+        {
+
+            Vector3 _position;
+            if (x % 2 == 1)
+            {
+                _position = new Vector3(x * reference.World.horizontal_space, y, z * reference.World.vertical_space + reference.World.vertical_offset);
+            }
+            else
+            {
+                _position = new Vector3(x * reference.World.horizontal_space, y, z * reference.World.vertical_space);
+            }
+            position = _position;
+
+            Vector3 _position_world;
+            _position_world = new Vector3(_position.x, _position.z, _position.y);
+            position_world = _position_world;
+
+            Vector3 _position_offset;
+            _position_offset = new Vector3(x, z, y);
+            position_offset = _position_offset;
+
+            Vector3 _position_axial;
+            _position_axial = new Vector3();
+            position_axial = _position_axial;
+
+            Vector3 _position_cube;
+            _position_cube = new Vector3();
+            position_cube = _position_cube;
+
         }
 
         public bool check_click(Vector2 mouse_pos, Camera camera)
@@ -110,7 +160,7 @@ namespace Assets.scripts
         /// Vertices are not numbered and need to be appended to all vertices of preceding tiles
         /// </summary>
         /// <param name="_position">Position of this tile in the scene</param>
-        private void add_vertices(Vector3 _position)
+        private void add_vertices()
         {
             vertices = new List<Vector3>{
                 Util.v2_to_v3(reference.World.vertex0, "y"),
@@ -122,7 +172,7 @@ namespace Assets.scripts
             };
             for (int i = 0; i < 6; i++)
             {
-                vertices[i] += _position;
+                vertices[i] += position;
             }
 
         }
