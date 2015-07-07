@@ -66,32 +66,52 @@ namespace Assets.scripts
         /// <param name="z"></param>
         private void set_positions(int x, int y, int z)
         {
+            Vector3 _position_offset;
+            _position_offset = new Vector3(x, y, z);
+            position_offset = _position_offset;
 
             Vector3 _position;
+            Vector3 _position_world;
+            float col;
+            float height;
+            float row;
+            col = x * reference.World.horizontal_space;
+            height = y;
+
             if (x % 2 == 1)
             {
-                _position = new Vector3(x * reference.World.horizontal_space, y, z * reference.World.vertical_space + reference.World.vertical_offset);
+                 row = z * reference.World.vertical_space + reference.World.vertical_offset;
             }
             else
             {
-                _position = new Vector3(x * reference.World.horizontal_space, y, z * reference.World.vertical_space);
+                row = z * reference.World.vertical_space;
             }
-            position = _position;
 
-            Vector3 _position_world;
-            _position_world = new Vector3(_position.x, _position.z, _position.y);
+            _position = new Vector3(col, height, row);
+            _position_world = new Vector3(row, col, height);
+            position = _position;
             position_world = _position_world;
 
-            Vector3 _position_offset;
-            _position_offset = new Vector3(x, z, y);
-            position_offset = _position_offset;
 
             Vector3 _position_axial;
-            _position_axial = new Vector3();
-            position_axial = _position_axial;
+            Vector4 _position_cube;
+            int _x = x;
+            int _y = y;
+            int _z;
 
-            Vector3 _position_cube;
-            _position_cube = new Vector3();
+            if (x % 2 == 1)
+            {
+                _z = z - ((x - 1) / 2);
+            }
+            else
+            {
+                _z = z - (x / 2);
+            }
+
+            int _w = -_x - _z;
+            _position_axial = new Vector3(_x, _y, _z);
+            _position_cube = new Vector4(_x, _y, _z, _w);
+            position_axial = _position_axial;
             position_cube = _position_cube;
 
         }
