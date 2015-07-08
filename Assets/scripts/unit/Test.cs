@@ -15,7 +15,6 @@ namespace Assets.scripts.unit
                 return "test";
             }
         }
-        public Test() {}
         public override string model_name 
         {
             get
@@ -23,5 +22,15 @@ namespace Assets.scripts.unit
                 return "test_unit.obj";
             }
         }
+
+        public override int move_range
+        {
+            get
+            {
+                return 2;
+            }
+        }
+
+        public Test() {}
     }
 }

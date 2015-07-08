@@ -30,6 +30,7 @@ namespace Assets.scripts
             unit.player = player;
             unit.spawn();
             unit.can_move = true;
+            unit.parrent_tile = tile;
             unit.move(tile, this, true);
             Debug.Log("Spawning " + unit.to_string());
             return unit;

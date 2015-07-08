@@ -17,10 +17,11 @@ namespace Assets.scripts
         /// Location of the center of the tile in the playfield
         /// </summary>
         public Vector3 position { get; private set; }
-        public Vector3 position_world { get; private set; }
-        public Vector4 position_cube { get; private set; }
-        public Vector3 position_axial { get; private set; }
-        public Vector3 position_offset { get; private set; }
+        public Vector2 position_world { get; private set; }
+        public Vector3 position_cube { get; private set; }
+        public Vector2 position_axial { get; private set; }
+        public Vector2 position_offset { get; private set; }
+        public float height { get; private set; }
         /// <summary>
         /// All vertices for this tile (total of 6)
         /// </summary>
@@ -51,7 +52,8 @@ namespace Assets.scripts
         /// <param name="_index"></param>
         public void init(int x, int y, int z, int _index)
         {
-            set_positions(x, y, z);
+            height = y;
+            set_positions(x, z);
            
             index = _index;
 
@@ -63,56 +65,39 @@ namespace Assets.scripts
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        /// <param name="z"></param>
-        private void set_positions(int x, int y, int z)
+        private void set_positions(int x, int y)
         {
-            Vector3 _position_offset;
-            _position_offset = new Vector3(x, y, z);
-            position_offset = _position_offset;
-
-            Vector3 _position;
-            Vector3 _position_world;
+            position_offset  = new Vector3(x, y);
             float col;
-            float height;
             float row;
             col = x * reference.World.horizontal_space;
-            height = y;
 
             if (x % 2 == 1)
             {
-                 row = z * reference.World.vertical_space + reference.World.vertical_offset;
+                 row = y * reference.World.vertical_space + reference.World.vertical_offset;
             }
             else
             {
-                row = z * reference.World.vertical_space;
+                row = y * reference.World.vertical_space;
             }
+            position = new Vector3(col, height, row);
+            position_world = new Vector2(row, col);
 
-            _position = new Vector3(col, height, row);
-            _position_world = new Vector3(row, col, height);
-            position = _position;
-            position_world = _position_world;
-
-
-            Vector3 _position_axial;
-            Vector4 _position_cube;
             int _x = x;
-            int _y = y;
-            int _z;
+            int _y;
 
             if (x % 2 == 1)
             {
-                _z = z - ((x - 1) / 2);
+                _y = y - ((x - 1) / 2);
             }
             else
             {
-                _z = z - (x / 2);
+                _y = y - (x / 2);
             }
 
-            int _w = -_x - _z;
-            _position_axial = new Vector3(_x, _y, _z);
-            _position_cube = new Vector4(_x, _y, _z, _w);
-            position_axial = _position_axial;
-            position_cube = _position_cube;
+            int _z = -_x - _y;
+            position_axial = new Vector2(_x, _y);
+            position_cube = new Vector3(_x, _y, _z);
 
         }
 

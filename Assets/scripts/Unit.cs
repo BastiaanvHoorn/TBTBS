@@ -10,8 +10,9 @@ namespace Assets.scripts
     {
         public Tile parrent_tile { get; set; }
         public GameObject obj { get; set; }
-        public abstract String model_name { get; }
+        public abstract string model_name { get; }
         public abstract string name { get; }
+        public abstract int move_range { get; }
         public Player player { get; set; }
         public bool can_move { get; set; }
         public Unit()
@@ -63,7 +64,7 @@ namespace Assets.scripts
         /// <returns>Returns true if succeeded, returns false if failed</returns>
         public virtual bool move(Tile target, Unit_manager unit_manager, bool spawn = false)
         {
-            if (Tile_manager.is_adjecent(this.obj.transform.position, target.position) || spawn)
+            if (Tile_manager.is_in_range(this.parrent_tile, target, move_range) || spawn)
             {
                 bool is_empty = unit_manager.is_tile_empty(target);
                 if (is_empty)
@@ -107,9 +108,8 @@ namespace Assets.scripts
         public GameObject show_range(ref Tile_manager world)
         {
             Vector3 grid_pos = parrent_tile.get_grid_pos3();
-            Tile_manager range = tiles_in_range(ref world);
+            Tile_manager range = world.get_tiles_in_range(parrent_tile, move_range);
             range.add<Grassland>(grid_pos);
-
 
             Vector3[] vertices = range.get_vertices();
             List<int> tri = range.get_tri(vertices);
@@ -140,7 +140,7 @@ namespace Assets.scripts
 
         private Tile_manager tiles_in_range(ref Tile_manager world)
         {
-            Tile_manager tiles = world.get_adjecent_tiles(parrent_tile);
+            Tile_manager tiles = world.get_tiles_in_range(parrent_tile);
             return tiles;
         }
     }

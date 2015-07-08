@@ -46,16 +46,16 @@ namespace Assets.scripts
         /// <param name="v2"></param>
         /// <param name="axis"></param>
         /// <returns></returns>
-        public static Vector3 v2_to_v3(Vector2 v2, string axis = "z")
+        public static Vector3 v2_to_v3(Vector2 v2, string axis = "z", float f = 0)
         {
             switch (axis)
             {
                 case "x":
-                    return new Vector3(0, v2.y, v2.x);
+                    return new Vector3(f, v2.y, v2.x);
                 case "y":
-                    return new Vector3(v2.x, 0, v2.y);
+                    return new Vector3(v2.x, f, v2.y);
                 case "z":
-                    return new Vector3(v2.x, v2.y, 0);
+                    return new Vector3(v2.x, v2.y, f);
             }
             return new Vector3();
         }

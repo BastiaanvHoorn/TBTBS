@@ -79,7 +79,7 @@ namespace Assets.scripts
             int y = (int)System.Math.Floor(pos.y);
             for (int i = 0; i < tiles.Count; i++)
             {
-                if (tiles[i].get_grid_pos2(true) == new Vector2(x, y))
+                if (tiles[i].position_offset == new Vector2(x, y))
                 {
                     return i;
                 }
@@ -88,45 +88,39 @@ namespace Assets.scripts
         }
 
         /// <summary>
-        /// Returns if the given tiles are lying next to each other (height doesn't matter)
-        /// The non-static method is preffered over this one
+        /// Returns true if the two specified tiles are within a certain manhattan range of eachother.
         /// </summary>
-        /// <param name="tile_1">Position of the first tile</param>
-        /// <param name="tile_2">Position of the second tile</param>
-        static public bool is_adjecent(Vector3 tile_1, Vector3 tile_2)
+        /// <param name="tile_1"></param>
+        /// <param name="tile_2"></param>
+        static public bool is_in_range(Tile tile_1, Tile tile_2, int range = 1)
         {
-            return (Vector2.Distance(Util.v3_to_v2(tile_1, "y"), Util.v3_to_v2(tile_2, "y")) <= 5);
+            int dx = (int)System.Math.Abs(tile_1.position_cube.x - tile_2.position_cube.x);
+            int dy = (int)System.Math.Abs(tile_1.position_cube.y - tile_2.position_cube.y);
+            int dz = (int)System.Math.Abs(tile_1.position_cube.z - tile_2.position_cube.z);
+            return dx + dy + dz <= range * 2;
         } 
-
-        public Tile_manager get_adjecent_tiles(Tile center)
-        {
-            Tile_manager in_range_tiles = new Tile_manager();
-            Vector2 grid_pos = center.get_grid_pos2(true) + new Vector2(0,1);
-            //int index = get_index_by_grid_pos(grid_pos);
-            //in_range_tiles.add<Test>(tiles[index].get_grid_pos3(true));
-            List<int> index = new List<int>();
-            for(int i = 0; i< count; i++)
-            {
-                if(is_adjecent(center.index, i))
-                {
-                    in_range_tiles.add<Test>(tiles[i].get_grid_pos3(true));
-                }
-            }
-            //in_range_tiles.Add(tiles[index]);
-            return in_range_tiles;
-        }
         /// <summary>
-        /// Returns if the given tiles are lying next to each other (height doesn't matter)
-        /// This method is preferred over the static one
+        /// Returns all tiles in a certain manhattan range around the specified tile.
         /// </summary>
-        /// <param name="tile_1">index of the first tile</param>
-        /// <param name="tile_2">index of the second tile</param>
-        public bool is_adjecent(int tile_1, int tile_2)
+        /// <param name="center"></param>
+        /// <param name="range"></param>
+        /// <returns></returns>
+        public Tile_manager get_tiles_in_range(Tile center, int range = 1)
         {
-            Vector2 pos1 = Util.v3_to_v2(tiles[tile_1].position,"y");
-            Vector2 pos2 = Util.v3_to_v2(tiles[tile_2].position,"y");
-            bool _return = (Vector2.Distance(pos1, pos2) <= 5 && tile_1 != tile_2);
-            return _return;
+            Tile_manager in_range_tiles = new Tile_manager();           
+            foreach(Tile tile in tiles)
+            {
+                if(tile.position_cube == center.position_cube)
+                {
+                    continue;
+                }
+                if (is_in_range(center, tile, range))
+                {
+                    in_range_tiles.add<Test>(Util.v2_to_v3(tile.position_offset, "y", tile.height));
+                }
+                
+            }
+            return in_range_tiles;
         }
 
         #region render
