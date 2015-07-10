@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Assets.scripts.tile;
 using UnityEngine;
+using System.Reflection;
+
 
 namespace Assets.scripts
 {
@@ -82,96 +84,80 @@ namespace Assets.scripts
 
         private void add_tiles(ref Tile_manager tile_manager)
         {
+            string[,] level = CSVReader.SplitCsvGrid(Resources.Load<TextAsset>("level1").text);
+            for (int i = 1; i < level.GetLength(1) - 1; i++)
+            {
+                int x = int.Parse(level[1, i]);
+                int height = int.Parse(level[2, i]);
+                int z = int.Parse(level[3, i]);
+
+                switch(level[0,i])
+                {
+                    case "Grassland":
+                        tile_manager.add<Grassland>(x, height, z);
+                        break;
+                    case "Stone":
+                        tile_manager.add<Stone>(x, height, z);
+                        break;
+                    case "Desert":
+                        tile_manager.add<Desert>(x, height, z);
+                        break;
+                }
+                
+
+                //System.Type type = System.Type.GetType(level[i, 0]);
+
+                //System.Action<> GenMethod = GenericMethod<Grassland>;
+                //MethodInfo method = GetType().GetMethod("add_tiles");
+                //MethodInfo generic = method.MakeGenericMethod(type);
+                //generic.Invoke(this, new object[] { x, height, z });
+            }
+
             //tile_manager.add<Grassland>(0, 0, 0);
-            //tile_manager.add<Grassland>(0, 1, 0);
-            //tile_manager.add<Grassland>(0, 2, 1);
-            //tile_manager.add<Stone>(0, 3, 2);
-            //tile_manager.add<Stone>(0, 4, 1);
-            //tile_manager.add<Grassland>(0, 5, 0);
+            //tile_manager.add<Grassland>(0, 0, 1);
+            //tile_manager.add<Grassland>(0, 1, 2);
+            //tile_manager.add<Stone>(0, 2, 3);
+            //tile_manager.add<Stone>(0, 1, 4);
+            //tile_manager.add<Grassland>(0, 0, 5);
 
             //tile_manager.add<Grassland>(1, 0, 0);
             //tile_manager.add<Stone>(1, 1, 1);
             //tile_manager.add<Stone>(1, 2, 2);
             //tile_manager.add<Stone>(1, 3, 3);
-            //tile_manager.add<Stone>(1, 4, 2);
+            //tile_manager.add<Stone>(1, 2, 4);
 
             //tile_manager.add<Grassland>(2, 0, 0);
-            //tile_manager.add<Grassland>(2, 1, 0);
-            //tile_manager.add<Grassland>(2, 2, 0);
-            //tile_manager.add<Grassland>(2, 3, 0);
-            //tile_manager.add<Grassland>(2, 4, 0);
-            //tile_manager.add<Grassland>(2, 5, 0);
+            //tile_manager.add<Grassland>(2, 0, 1);
+            //tile_manager.add<Grassland>(2, 0, 2);
+            //tile_manager.add<Grassland>(2, 0, 3);
+            //tile_manager.add<Grassland>(2, 0, 4);
+            //tile_manager.add<Grassland>(2, 0, 5);
 
             //tile_manager.add<Grassland>(3, 0, 0);
-            //tile_manager.add<Grassland>(3, 1, 0);
-            //tile_manager.add<Grassland>(3, 2, 0);
-            //tile_manager.add<Grassland>(3, 3, 0);
-            //tile_manager.add<Grassland>(3, 4, 0);
+            //tile_manager.add<Grassland>(3, 0, 1);
+            //tile_manager.add<Grassland>(3, 0, 2);
+            //tile_manager.add<Grassland>(3, 0, 3);
+            //tile_manager.add<Grassland>(3, 0, 4);
 
             //tile_manager.add<Grassland>(4, 0, 0);
-            //tile_manager.add<Grassland>(4, 1, 0);
-            //tile_manager.add<Stone>(4, 2, 0);
-            //tile_manager.add<Stone>(4, 3, 0);
-            //tile_manager.add<Grassland>(4, 4, 0);
-            //tile_manager.add<Grassland>(4, 5, 0);
+            //tile_manager.add<Grassland>(4, 0, 1);
+            //tile_manager.add<Stone>(4, 0, 2);
+            //tile_manager.add<Stone>(4, 0, 3);
+            //tile_manager.add<Grassland>(4, 0, 4);
+            //tile_manager.add<Grassland>(4, 0, 5);
 
             //tile_manager.add<Grassland>(5, 0, 0);
-            //tile_manager.add<Grassland>(5, 1, 0);
-            //tile_manager.add<Desert>(5, 2, 0);
-            //tile_manager.add<Grassland>(5, 3, 0);
-            //tile_manager.add<Grassland>(5, 4, 0);
+            //tile_manager.add<Grassland>(5, 0, 1);
+            //tile_manager.add<Desert>(5, 0, 2);
+            //tile_manager.add<Grassland>(5, 0, 3);
+            //tile_manager.add<Grassland>(5, 0, 4);
 
             //tile_manager.add<Grassland>(6, 0, 0);
-            //tile_manager.add<Grassland>(6, 1, 0);
-            //tile_manager.add<Grassland>(6, 2, 0);
-            //tile_manager.add<Grassland>(6, 3, 0);
-            //tile_manager.add<Grassland>(6, 4, 0);
-            //tile_manager.add<Grassland>(6, 5, 0);
-            tile_manager.add<Grassland>(0, 0, 0);
-            tile_manager.add<Grassland>(0, 0, 1);
-            tile_manager.add<Grassland>(0, 1, 2);
-            tile_manager.add<Stone>(0, 2, 3);
-            tile_manager.add<Stone>(0, 1, 4);
-            tile_manager.add<Grassland>(0, 0, 5);
-
-            tile_manager.add<Grassland>(1, 0, 0);
-            tile_manager.add<Stone>(1, 1, 1);
-            tile_manager.add<Stone>(1, 2, 2);
-            tile_manager.add<Stone>(1, 3, 3);
-            tile_manager.add<Stone>(1, 2, 4);
-
-            tile_manager.add<Grassland>(2, 0, 0);
-            tile_manager.add<Grassland>(2, 0, 1);
-            tile_manager.add<Grassland>(2, 0, 2);
-            tile_manager.add<Grassland>(2, 0, 3);
-            tile_manager.add<Grassland>(2, 0, 4);
-            tile_manager.add<Grassland>(2, 0, 5);
-
-            tile_manager.add<Grassland>(3, 0, 0);
-            tile_manager.add<Grassland>(3, 0, 1);
-            tile_manager.add<Grassland>(3, 0, 2);
-            tile_manager.add<Grassland>(3, 0, 3);
-            tile_manager.add<Grassland>(3, 0, 4);
-
-            tile_manager.add<Grassland>(4, 0, 0);
-            tile_manager.add<Grassland>(4, 0, 1);
-            tile_manager.add<Stone>(4, 0, 2);
-            tile_manager.add<Stone>(4, 0, 3);
-            tile_manager.add<Grassland>(4, 0, 4);
-            tile_manager.add<Grassland>(4, 0, 5);
-
-            tile_manager.add<Grassland>(5, 0, 0);
-            tile_manager.add<Grassland>(5, 0, 1);
-            tile_manager.add<Desert>(5, 0, 2);
-            tile_manager.add<Grassland>(5, 0, 3);
-            tile_manager.add<Grassland>(5, 0, 4);
-
-            tile_manager.add<Grassland>(6, 0, 0);
-            tile_manager.add<Grassland>(6, 0, 1);
-            tile_manager.add<Grassland>(6, 0, 2);
-            tile_manager.add<Grassland>(6, 0, 3);
-            tile_manager.add<Grassland>(6, 0, 4);
-            tile_manager.add<Grassland>(6, 0, 5);
+            //tile_manager.add<Grassland>(6, 0, 1);
+            //tile_manager.add<Grassland>(6, 0, 2);
+            //tile_manager.add<Grassland>(6, 0, 3);
+            //tile_manager.add<Grassland>(6, 0, 4);
+            //tile_manager.add<Grassland>(6, 0, 5);
 
         }
     }
