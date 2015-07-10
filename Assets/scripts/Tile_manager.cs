@@ -54,7 +54,7 @@ namespace Assets.scripts
             return add<Tile_type>((int)pos.x, (int)pos.y, (int)pos.z);
         }
 
-        public void add_range(IEnumerable<Tile> _tiles)
+        public void add(IEnumerable<Tile> _tiles)
         {
             tiles.AddRange(_tiles);
         }
@@ -66,11 +66,11 @@ namespace Assets.scripts
         /// </summary>
         /// <param name="pos">The grid position of the requested tile </param>
         /// <returns></returns>
-        public int get_index_by_grid_pos(Vector2 pos)
+        public int get_index_by_axial_pos(Vector2 pos)
         {
             for (int i = 0; i < tiles.Count; i++)
             {
-                if (tiles[i].get_grid_pos2() == pos)
+                if (tiles[i].position_axial == pos)
                 {
                     return i;
                 }
@@ -79,14 +79,14 @@ namespace Assets.scripts
             int y = (int)System.Math.Floor(pos.y);
             for (int i = 0; i < tiles.Count; i++)
             {
-                if (tiles[i].position_offset == new Vector2(x, y))
+                if (tiles[i].position_axial == new Vector2(x, y))
                 {
                     return i;
                 }
             }
             return -1;
         }
-
+        #region momement and range methods
         /// <summary>
         /// Returns true if the two specified tiles are within a certain manhattan range of eachother.
         /// </summary>
@@ -105,9 +105,10 @@ namespace Assets.scripts
         /// <param name="center"></param>
         /// <param name="range"></param>
         /// <returns></returns>
-        public Tile_manager get_tiles_in_range(Tile center, int range = 1)
+        public List<Tile> get_tiles_in_range(Tile center, int range = 1)
         {
-            Tile_manager in_range_tiles = new Tile_manager();           
+            List<Tile> in_range_tiles = new List<Tile>();
+            Tile_manager manager = new Tile_manager();           
             foreach(Tile tile in tiles)
             {
                 if(tile.position_cube == center.position_cube)
@@ -116,13 +117,14 @@ namespace Assets.scripts
                 }
                 if (is_in_range(center, tile, range))
                 {
-                    in_range_tiles.add<Test>(Util.v2_to_v3(tile.position_offset, "y", tile.height));
+                    in_range_tiles.Add(manager.add<Test>(Util.v2_to_v3(tile.position_offset, "y", tile.height)));
+                    
                 }
                 
             }
             return in_range_tiles;
         }
-
+        #endregion
         #region render
         //Render stuff
 
@@ -233,15 +235,15 @@ namespace Assets.scripts
                 //The tile
                 uv[i + vertices_amount * 0] += tiles[i / 6].tex_location * (float)World.tex_scale;
 
-                Vector2 this_pos = tiles[i / 6].get_grid_pos2();
+                Vector2 this_pos = tiles[i / 6].position_axial;
 
                 int index = i / 6;
-                int bot = this.get_index_by_grid_pos(this_pos + new Vector2(0, -1));
-                int bot_right = this.get_index_by_grid_pos(this_pos + new Vector2(1, -.5f));
-                int top_right = this.get_index_by_grid_pos(this_pos + new Vector2(1, .5f));
-                int top = this.get_index_by_grid_pos(this_pos + new Vector2(0, 1));
-                int top_left = this.get_index_by_grid_pos(this_pos + new Vector2(-1, .5f));
-                int bot_left = this.get_index_by_grid_pos(this_pos + new Vector2(-1, -.5f));
+                int bot = this.get_index_by_axial_pos(this_pos + new Vector2(0, -1));
+                int bot_right = this.get_index_by_axial_pos(this_pos + new Vector2(1, -1));
+                int top_right = this.get_index_by_axial_pos(this_pos + new Vector2(1, 0));
+                int top = this.get_index_by_axial_pos(this_pos + new Vector2(0, 1));
+                int top_left = this.get_index_by_axial_pos(this_pos + new Vector2(-1, 1));
+                int bot_left = this.get_index_by_axial_pos(this_pos + new Vector2(-1, 0));
 
                 if (k == 0 || k == 1)
                     uv[i + vertices_amount * 3] += get_rect_tex_location(index, bot);

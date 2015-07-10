@@ -35,7 +35,7 @@ namespace Assets.scripts
             Debug.Log("Spawning " + unit.to_string());
             return unit;
         }
-        public bool is_tile_empty(Tile tile)
+        public bool is_tile_free(Tile tile)
         {
             for (int i = 0; i < count; i++)
             {

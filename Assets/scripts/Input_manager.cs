@@ -22,9 +22,10 @@ namespace Assets.scripts
                 Object.Destroy(current_range);
                 for (int i = 0; i < tile_manager.count; i++)
                 {
-                    if (tile_manager[i].check_click(Input.mousePosition, Camera.main))
+                    if (tile_manager[i].is_pixel_of_tile(Input.mousePosition, Camera.main))
                     {
-                        Vector3 tile_pos = tile_manager[i].position;
+                        Tile tile = tile_manager[i];
+                        Vector3 tile_pos = tile.position;
                         move_focus(tile_pos);
                         if (Input.GetMouseButtonDown(0))
                         {

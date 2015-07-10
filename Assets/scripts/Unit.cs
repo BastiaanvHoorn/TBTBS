@@ -66,7 +66,7 @@ namespace Assets.scripts
         {
             if (Tile_manager.is_in_range(this.parrent_tile, target, move_range) || spawn)
             {
-                bool is_empty = unit_manager.is_tile_empty(target);
+                bool is_empty = unit_manager.is_tile_free(target);
                 if (is_empty)
                 {
                     if (can_move || spawn)
@@ -107,9 +107,11 @@ namespace Assets.scripts
         }
         public GameObject show_range(ref Tile_manager world)
         {
-            Vector3 grid_pos = parrent_tile.get_grid_pos3();
-            Tile_manager range = world.get_tiles_in_range(parrent_tile, move_range);
-            range.add<Grassland>(grid_pos);
+            Tile_manager range = new Tile_manager();
+            List<Tile> tiles = world.get_tiles_in_range(parrent_tile, move_range);
+
+            range.add(tiles);
+            range.add<Grassland>(Util.v2_to_v3(parrent_tile.position_offset, "y", parrent_tile.height));
 
             Vector3[] vertices = range.get_vertices();
             List<int> tri = range.get_tri(vertices);
@@ -136,12 +138,6 @@ namespace Assets.scripts
             obj.transform.position += new Vector3(0, .01f, 0);
 
             return obj;
-        }
-
-        private Tile_manager tiles_in_range(ref Tile_manager world)
-        {
-            Tile_manager tiles = world.get_tiles_in_range(parrent_tile);
-            return tiles;
         }
     }
 }

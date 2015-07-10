@@ -41,8 +41,8 @@ namespace Assets.scripts
         public abstract int tex_prio { get; }
         #endregion
 
+        #region initializing
         public Tile() { }
-        //TODO make the z the height of the tile;
         /// <summary>
         /// 
         /// </summary>
@@ -100,8 +100,14 @@ namespace Assets.scripts
             position_cube = new Vector3(_x, _y, _z);
 
         }
-
-        public bool check_click(Vector2 mouse_pos, Camera camera)
+        #endregion
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pixel"></param>
+        /// <param name="camera"></param>
+        /// <returns></returns>
+        public bool is_pixel_of_tile(Vector2 pixel, Camera camera)
         {
             // Convert all corners of this tile to 2d coordinates on the screen
             Vector2 _0 = Util.v3_to_v2(camera.WorldToScreenPoint(position + Util.v2_to_v3(reference.World.vertex0, "y")), "z");
@@ -118,11 +124,11 @@ namespace Assets.scripts
             float[] left_bot = Util.get_line(_0, _5);
 
             // Check if the mouse is between those lines
-            if ((mouse_pos.y > right_bot[0] * mouse_pos.x + right_bot[1]) &&
-               (mouse_pos.y < left_top[0] * mouse_pos.x + left_top[1]) &&
-               (mouse_pos.y < right_top[0] * mouse_pos.x + right_top[1]) &&
-               (mouse_pos.y > left_bot[0] * mouse_pos.x + left_bot[1]) &&
-               (mouse_pos.y < _4.y) && (mouse_pos.y > _1.y))
+            if ((pixel.y > right_bot[0] * pixel.x + right_bot[1]) &&
+               (pixel.y < left_top[0] * pixel.x + left_top[1]) &&
+               (pixel.y < right_top[0] * pixel.x + right_top[1]) &&
+               (pixel.y > left_bot[0] * pixel.x + left_bot[1]) &&
+               (pixel.y < _4.y) && (pixel.y > _1.y))
             {
                 on_click();
                 return true;
@@ -131,33 +137,6 @@ namespace Assets.scripts
         }
 
         protected abstract void on_click();
-
-        /// <summary>
-        /// Returns a  vector2 of the position of this tile relative too all other tiles
-        /// </summary>
-        /// <returns></returns>
-        public Vector2 get_grid_pos2(bool rounded = false)
-        {
-            float x = (float)System.Math.Round(position.x / reference.World.horizontal_space);
-            float y = (position.z / reference.World.vertical_space);
-            if (rounded)
-            {
-                y = (float)System.Math.Floor(y);
-            }
-            return new Vector2(x, y);
-        }
-
-        public Vector3 get_grid_pos3(bool rounded = false)
-        {
-            float x = (float)System.Math.Round(position.x / reference.World.horizontal_space);
-            float y = position.y;
-            float z = (position.z / reference.World.vertical_space);
-            if (rounded)
-            {
-                z = (float)System.Math.Floor(z);
-            }
-            return new Vector3(x, y, z);
-        }
 
         #region render stuff
         /// <summary>
