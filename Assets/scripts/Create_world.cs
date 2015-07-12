@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.scripts.tile;
 using UnityEngine;
-using System.Reflection;
 
 
 namespace Assets.scripts
@@ -13,7 +12,7 @@ namespace Assets.scripts
         Tile_manager tile_manager = new Tile_manager();
         Input_manager input_manager;
 
-        public int turns = 0;
+        public int turns;
         public GameObject focus;
         public Animator focus_an;
         public Texture texture;
@@ -34,16 +33,18 @@ namespace Assets.scripts
             mesh.vertices = vertices;
             mesh.triangles = tri.ToArray();
             mesh.uv = uv;
+            //mesh.Optimize();
             mesh.RecalculateNormals();
-            mesh.Optimize();
             GetComponent<Renderer>().material.SetColor("_Color", new Color(.7f, .7f, .7f));
             GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
+            GetComponent<Renderer>().material.SetFloat("_Glossiness", 0f);
 
             unit_manager.add<unit.Test>(tile_manager[0], Player.Blue);
             unit_manager.add<unit.Test>(tile_manager[8], Player.Red);
 
             Debug.Log("Loaded world in " + sw.ElapsedMilliseconds + " ms");
             sw.Stop();
+            end_turn();
             
         }
 
@@ -78,13 +79,14 @@ namespace Assets.scripts
             for(int i = 0; i < unit_manager.count; i++)
             {
                 unit_manager[i].can_move = true;
+                unit_manager[i].can_attack = true;
             }
             Debug.Log("turn " + turns + " has been ended");
         }
 
         private void add_tiles(ref Tile_manager tile_manager)
         {
-            string[,] level = CSVReader.SplitCsvGrid(Resources.Load<TextAsset>("level1").text);
+            string[,] level = CSVReader.SplitCsvGrid(Resources.Load<TextAsset>("levels/level1").text);
             for (int i = 1; i < level.GetLength(1) - 1; i++)
             {
                 int x = int.Parse(level[1, i]);

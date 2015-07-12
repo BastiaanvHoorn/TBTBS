@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+using UnityEngine.UI;
 using Assets.scripts.tile;
 
 namespace Assets.scripts
@@ -13,13 +13,21 @@ namespace Assets.scripts
         public abstract string model_name { get; }
         public abstract string name { get; }
         public abstract int move_range { get; }
+        public abstract int max_health { get; }
+        public abstract int attack_range { get; }
+        public abstract int damage { get; }
+        public int current_health { get; private set; }
         public Player player { get; set; }
         public bool can_move { get; set; }
+        public bool can_attack { get; set; }
         public Unit()
         {
+            current_health = max_health;
         }
 
         //Create the actual gameobject in the scene
+        #region spawning methods
+
         public void spawn()
         {
             obj = new GameObject("soldiers");
@@ -37,10 +45,11 @@ namespace Assets.scripts
         private GameObject add_unit(Vector3 position)
         {
             GameObject unit = new GameObject("soldier");
-            
-            unit.AddComponent<MeshFilter>().mesh = AssetDatabase.LoadAssetAtPath<Mesh>("Assets/meshes/test_unit.3ds");
+            unit.AddComponent<MeshFilter>().mesh = Resources.Load<Mesh>("meshes/test_unit");
+            unit.transform.localScale = new Vector3(.2f, .2f, .2f);
+            //unit.AddComponent<MeshFilter>().mesh = AssetDatabase.LoadAssetAtPath<Mesh>("Assets/meshes/test_unit.3ds");
             Material material = unit.AddComponent<MeshRenderer>().material = new Material(Shader.Find("Diffuse"));
-            if(this.player == Player.Blue)
+            if (this.player == Player.Blue)
             {
                 material.color = reference.Player_color.blue;
             }
@@ -55,6 +64,7 @@ namespace Assets.scripts
         {
             return this.GetType().ToString() + " on " + this.obj.transform.position.ToString();
         }
+        #endregion
         /// <summary>
         /// Moves this unit to the target tile if possible
         /// </summary>
@@ -64,29 +74,72 @@ namespace Assets.scripts
         /// <returns>Returns true if succeeded, returns false if failed</returns>
         public virtual bool move(Tile target, Unit_manager unit_manager, bool spawn = false)
         {
-            if (Tile_manager.is_in_range(this.parrent_tile, target, move_range) || spawn)
+            if ((Tile_manager.is_in_range(this.parrent_tile, target, move_range) && can_move || spawn) && unit_manager.is_tile_free(target))
             {
-                bool is_empty = unit_manager.is_tile_free(target);
-                if (is_empty)
+                if (!spawn)
                 {
-                    if (can_move || spawn)
+                    can_move = false;
+                }
+                else
+                {
+                    this.obj.transform.position = target.position;
+                }
+                this.parrent_tile = target;
+                return true;
+            }
+            if (unit_manager.is_attackable(target) && Tile_manager.is_in_range(target, parrent_tile, attack_range) && can_attack)
+            {
+                Unit target_unit = unit_manager.get_unit_by_tile(target);
+                if (target_unit.player != this.player)
+                {
+
+                    if (target_unit.attack(this))
                     {
-                        if(!spawn)
-                        {
-                            can_move = false;
-                        }
-                        else
-                        {
-                            this.obj.transform.position = target.position;
-                        }
-                        this.parrent_tile = target;
-                        return true; 
+                        unit_manager.kill(target_unit);
                     }
+                    can_attack = false;
+                    can_move = false;
                 }
             }
             return false;
         }
+        /// <summary>
+        /// This function is called by the attacker
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <returns>returns if the attacked unit survived</returns>
+        public bool attack(Unit attacker)
+        {
+            current_health -= attacker.damage;
+            Debug.Log(attacker.to_string() + " attacked " + this.to_string() + " with " + attacker.damage + " damage; " + current_health + " health remaining.");
+            if (current_health < 1)
+            {
+                return true;
+            }
+            //TODO add timer to remove and replace prefab with procedural
+            Canvas canvas = GameObject.FindObjectOfType<Canvas>();
+            GameObject damage_splat = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/damage splat"));
+            damage_splat.transform.SetParent(canvas.transform);
+            RectTransform transform = damage_splat.GetComponent<RectTransform>();
+            transform.anchorMin = new Vector2();
+            transform.anchorMax = new Vector2();
+            transform.localScale = new Vector3(.5f, .5f, .5f);
+            Camera camera = Camera.main;
+            Vector3 position = obj.transform.position;
+            transform.position = camera.WorldToScreenPoint(position);
+            //GameObject damage_splat = new GameObject("damage splat");
 
+            //damage_splat.AddComponent<RectTransform>();
+            //Image image = damage_splat.AddComponent<Image>();
+            //Texture2D texture = Resources.Load<Texture2D>("sprites/damage splats/1");
+            //image.sprite = Sprite.Create(texture, new Rect(), new Vector2());
+
+            
+            return false;
+        }
+        /// <summary>
+        /// Used to animate movement
+        /// </summary>
         public void move_towards()
         {
             Vector3 parrent_pos = parrent_tile.position;
@@ -95,7 +148,7 @@ namespace Assets.scripts
             {
                 this_pos = Vector3.MoveTowards(this_pos, parrent_pos, .1f);
             }
-            else if(this_pos.y >= parrent_pos.y)
+            else if (this_pos.y >= parrent_pos.y)
             {
                 this_pos = Vector3.MoveTowards(this_pos, new Vector3(parrent_pos.x, this_pos.y, parrent_pos.z), .1f);
             }

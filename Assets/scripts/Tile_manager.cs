@@ -124,7 +124,9 @@ namespace Assets.scripts
             }
             return in_range_tiles;
         }
+
         #endregion
+
         #region render
         //Render stuff
 

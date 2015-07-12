@@ -46,7 +46,28 @@ namespace Assets.scripts
             }
             return true;
         }
-        
+        public bool is_attackable(Tile tile)
+        {
+            foreach (Unit unit in units)
+            {
+                if (unit.parrent_tile.position_axial == tile.position_axial)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Unit get_unit_by_tile(Tile tile)
+        {
+            return units.Find(unit => unit.parrent_tile.position_axial == tile.position_axial);
+        }
+        public void kill(Unit unit)
+        {
+            units.Remove(unit);
+            Debug.Log(unit.to_string() + " has been killed");
+            GameObject.Destroy(unit.obj);
+        }
         public void move_units()
         {
             foreach(Unit unit in units)

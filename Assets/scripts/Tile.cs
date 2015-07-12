@@ -101,8 +101,9 @@ namespace Assets.scripts
 
         }
         #endregion
+
         /// <summary>
-        /// 
+        /// Returns true if the given pixel is part of this tile
         /// </summary>
         /// <param name="pixel"></param>
         /// <param name="camera"></param>

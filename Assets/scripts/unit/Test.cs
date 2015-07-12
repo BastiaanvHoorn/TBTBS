@@ -31,6 +31,31 @@ namespace Assets.scripts.unit
             }
         }
 
+        public override int max_health
+        {
+            get
+            {
+                return 10;
+            }
+        }
+
+        public override int attack_range
+        {
+            get
+            {
+                //mellee
+                return 1;
+            }
+        }
+
+        public override int damage
+        {
+            get
+            {
+                return (int)Math.Floor(current_health / 4.0);
+            }
+        }
+
         public Test() {}
     }
 }
