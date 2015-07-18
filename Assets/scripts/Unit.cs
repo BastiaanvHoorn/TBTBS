@@ -110,33 +110,38 @@ namespace Assets.scripts
         /// <returns>returns if the attacked unit survived</returns>
         public bool attack(Unit attacker)
         {
-            current_health -= attacker.damage;
-            Debug.Log(attacker.to_string() + " attacked " + this.to_string() + " with " + attacker.damage + " damage; " + current_health + " health remaining.");
+            int damage = attacker.damage;
+            current_health -= damage;
+            display_damage(damage);
+            Debug.Log(attacker.to_string() + " attacked " + this.to_string() + " with " + damage + " damage; " + current_health + " health remaining.");
             if (current_health < 1)
             {
                 return true;
             }
-            //TODO add timer to remove and replace prefab with procedural
+
+            return false;
+        }
+
+        private void display_damage(int damage)
+        {
             Canvas canvas = GameObject.FindObjectOfType<Canvas>();
-            GameObject damage_splat = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/damage splat"));
+
+            GameObject damage_splat = new GameObject("damage splat");
+            damage_splat.AddComponent<RectTransform>();
+            damage_splat.AddComponent<CanvasRenderer>();
+            Image image = damage_splat.AddComponent<Image>();
+
+            image.sprite = Resources.Load<Sprite>("sprites/damage splats/" + damage);
+
             damage_splat.transform.SetParent(canvas.transform);
             RectTransform transform = damage_splat.GetComponent<RectTransform>();
-            transform.anchorMin = new Vector2();
-            transform.anchorMax = new Vector2();
             transform.localScale = new Vector3(.5f, .5f, .5f);
             Camera camera = Camera.main;
             Vector3 position = obj.transform.position;
             transform.position = camera.WorldToScreenPoint(position);
-            //GameObject damage_splat = new GameObject("damage splat");
-
-            //damage_splat.AddComponent<RectTransform>();
-            //Image image = damage_splat.AddComponent<Image>();
-            //Texture2D texture = Resources.Load<Texture2D>("sprites/damage splats/1");
-            //image.sprite = Sprite.Create(texture, new Rect(), new Vector2());
-
-            
-            return false;
+            GameObject.Destroy(damage_splat, 2);
         }
+
         /// <summary>
         /// Used to animate movement
         /// </summary>

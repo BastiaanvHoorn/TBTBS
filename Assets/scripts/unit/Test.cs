@@ -52,7 +52,7 @@ namespace Assets.scripts.unit
         {
             get
             {
-                return (int)Math.Floor(current_health / 4.0);
+                return (int)Math.Ceiling(current_health / 4.0);
             }
         }
 
