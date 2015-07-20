@@ -16,11 +16,13 @@ namespace Assets.scripts
         public GameObject focus;
         public Animator focus_an;
         public Texture texture;
+        public UnityEngine.UI.Text movespeed;
+        public UnityEngine.UI.Text strength;
+        public UnityEngine.UI.Text type;
         private Player current_player = Player.Blue;
         void Start()
         {
             System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
-
             input_manager = new Input_manager(focus, focus_an);
             Mesh mesh = gameObject.AddComponent<MeshFilter>().mesh;
             
@@ -87,10 +89,10 @@ namespace Assets.scripts
         private void add_tiles(ref Tile_manager tile_manager)
         {
             string[,] level = CSVReader.SplitCsvGrid(Resources.Load<TextAsset>("levels/level1").text);
-            for (int i = 1; i < level.GetLength(1) - 1; i++)
+            for (int i = 1; i < 40 - 1; i++)
             {
                 int x = int.Parse(level[1, i]);
-                int height = int.Parse(level[2, i]);
+                float height = float.Parse(level[2, i]);
                 int z = int.Parse(level[3, i]);
 
                 switch(level[0,i])

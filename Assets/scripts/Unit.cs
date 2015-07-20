@@ -121,7 +121,6 @@ namespace Assets.scripts
 
             return false;
         }
-
         private void display_damage(int damage)
         {
             Canvas canvas = GameObject.FindObjectOfType<Canvas>();

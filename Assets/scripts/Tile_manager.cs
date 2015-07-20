@@ -40,7 +40,7 @@ namespace Assets.scripts
         /// <param name="x">The x-position of the tile in the hex-grid</param>
         /// <param name="y">The height of the tile in the hex-grid</param>
         /// <param name="z">The z-position of the tile in the hex-grid</param>
-        public Tile add<Tile_type>(int x, int y, int z) where Tile_type : Tile, new()
+        public Tile add<Tile_type>(int x, float y, int z) where Tile_type : Tile, new()
         {
             Tile_type tile = new Tile_type();
             

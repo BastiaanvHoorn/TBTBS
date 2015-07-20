@@ -14,13 +14,24 @@ namespace Assets.scripts
     {
         #region variable declaration
         /// <summary>
-        /// Location of the center of the tile in the playfield
+        /// Location of the center of the tile in world coordinates
         /// </summary>
         public Vector3 position { get; private set; }
-        public Vector2 position_world { get; private set; }
+        /// <summary>
+        /// Cube coordinates of this tile
+        /// </summary>
         public Vector3 position_cube { get; private set; }
+        /// <summary>
+        /// Axial coordinates of this tile
+        /// </summary>
         public Vector2 position_axial { get; private set; }
+        /// <summary>
+        /// Offset coordinates of this tile
+        /// </summary>
         public Vector2 position_offset { get; private set; }
+        /// <summary>
+        /// The elevation of this tile
+        /// </summary>
         public float height { get; private set; }
         /// <summary>
         /// All vertices for this tile (total of 6)
@@ -50,9 +61,9 @@ namespace Assets.scripts
         /// <param name="y">height</param>
         /// <param name="z"></param>
         /// <param name="_index"></param>
-        public void init(int x, int y, int z, int _index)
+        public void init(int x, float _height, int z, int _index)
         {
-            height = y;
+            height = _height;
             set_positions(x, z);
            
             index = _index;
@@ -81,7 +92,6 @@ namespace Assets.scripts
                 row = y * reference.World.vertical_space;
             }
             position = new Vector3(col, height, row);
-            position_world = new Vector2(row, col);
 
             int _x = x;
             int _y;
