@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.scripts
+namespace Assets.Scripts
 {
     public class Unit_manager
     {
         public List<Unit> units { get; private set; }
+
         public int count
         {
             get { return units.Count; }
@@ -29,9 +27,9 @@ namespace Assets.scripts
             units.Add(unit);
             unit.player = player;
             unit.spawn();
-            unit.can_move = true;
             unit.parrent_tile = tile;
-            unit.move(tile, this, true);
+            unit.move_goal = tile;
+            unit.move();
             Debug.Log("Spawning " + unit.to_string());
             return unit;
         }
@@ -68,12 +66,6 @@ namespace Assets.scripts
             Debug.Log(unit.to_string() + " has been killed");
             GameObject.Destroy(unit.obj);
         }
-        public void move_units()
-        {
-            foreach(Unit unit in units)
-            {
-                unit.move_towards();
-            }
-        }
+
     }
 }

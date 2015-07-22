@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Assets.scripts.tile;
+using Assets.Scripts.tile;
 using UnityEngine;
 
 
-namespace Assets.scripts
+namespace Assets.Scripts
 {
     public enum Player { Blue, Red };
     public class Create_world : MonoBehaviour
@@ -16,9 +16,6 @@ namespace Assets.scripts
         public GameObject focus;
         public Animator focus_an;
         public Texture texture;
-        public UnityEngine.UI.Text movespeed;
-        public UnityEngine.UI.Text strength;
-        public UnityEngine.UI.Text type;
         private Player current_player = Player.Blue;
         void Start()
         {
@@ -35,8 +32,8 @@ namespace Assets.scripts
             mesh.vertices = vertices;
             mesh.triangles = tri.ToArray();
             mesh.uv = uv;
-            //mesh.Optimize();
             mesh.RecalculateNormals();
+            mesh.Optimize();
             GetComponent<Renderer>().material.SetColor("_Color", new Color(.7f, .7f, .7f));
             GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
             GetComponent<Renderer>().material.SetFloat("_Glossiness", 0f);
@@ -53,9 +50,11 @@ namespace Assets.scripts
 
         void Update()
         {
-            input_manager.process_input(ref unit_manager, ref tile_manager, current_player);
-            
-            unit_manager.move_units();      
+            foreach(Unit unit in unit_manager.units)
+            {
+                unit.move_towards(tile_manager);
+            }
+            input_manager.process_input(ref unit_manager, ref tile_manager, current_player);  
         }
 
         public void switch_player(GameObject button)
@@ -77,12 +76,13 @@ namespace Assets.scripts
 
         public void end_turn()
         {
-            turns++;
-            for(int i = 0; i < unit_manager.count; i++)
+            foreach(Unit unit in unit_manager.units)
             {
-                unit_manager[i].can_move = true;
-                unit_manager[i].can_attack = true;
+                unit.move(tile_manager);
+                unit.move_goal = null;
+
             }
+            turns++;
             Debug.Log("turn " + turns + " has been ended");
         }
 

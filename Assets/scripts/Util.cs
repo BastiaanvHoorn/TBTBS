@@ -1,14 +1,9 @@
 ﻿using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Assets.scripts
+namespace Assets.Scripts
 {
     static class Util
     {
-
         /// <summary>
         /// Returns the index of wich the given vector3 in the given array.
         /// Returns -1 if Vector3 is not found
@@ -65,7 +60,7 @@ namespace Assets.scripts
         /// </summary>
         /// <param name="axis">the axis wich must be ignored during conversion</param>
         /// <returns>Returns the Vector3 stripped of the given axis</returns>
-        public static Vector2 v3_to_v2(Vector3 v3, string axis)
+        public static Vector2 v3_to_v2(Vector3 v3, string axis = "z")
         {
             switch (axis)
             {

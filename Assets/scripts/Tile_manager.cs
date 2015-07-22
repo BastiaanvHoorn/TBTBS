@@ -1,13 +1,10 @@
-﻿ using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Assets.scripts;
 using UnityEngine;
-using Assets.scripts.reference;
-using Assets.scripts.tile;
+using Assets.Scripts.reference;
+using Assets.Scripts.tile;
 
-namespace Assets.scripts
+namespace Assets.Scripts
 {
     public class Tile_manager
     {
@@ -30,7 +27,7 @@ namespace Assets.scripts
             {
                 return tiles[index];
             }
-        } 
+        }
         #endregion
         #region adding methods
 
@@ -43,7 +40,7 @@ namespace Assets.scripts
         public Tile add<Tile_type>(int x, float y, int z) where Tile_type : Tile, new()
         {
             Tile_type tile = new Tile_type();
-            
+
             tile.init(x, y, z, count);
             tiles.Add(tile);
             return tile;
@@ -66,26 +63,47 @@ namespace Assets.scripts
         /// </summary>
         /// <param name="pos">The grid position of the requested tile </param>
         /// <returns></returns>
-        public int get_index_by_axial_pos(Vector2 pos)
+        public int get_index_by_pos(Vector2 pos, string coord_sys = "axial", bool uv = false)
         {
-            for (int i = 0; i < tiles.Count; i++)
+            if(coord_sys != "axial" && coord_sys != "cube")
             {
-                if (tiles[i].position_axial == pos)
-                {
-                    return i;
-                }
+                Debug.LogError("Non-valid argument, returning zero");
+                return 0;
             }
-            int x = (int)System.Math.Floor(pos.x);
-            int y = (int)System.Math.Floor(pos.y);
             for (int i = 0; i < tiles.Count; i++)
             {
-                if (tiles[i].position_axial == new Vector2(x, y))
+                switch (coord_sys)
                 {
-                    return i;
+                    case "axial":
+                        if (tiles[i].position_axial == pos)
+                            return i;
+
+                        break;
+                    case "cube":
+                        if (tiles[i].position_cube == Util.v2_to_v3(pos, "z", -pos.x-pos.y))
+                            return i;
+
+                        break;
                 }
+
+            }
+            if(!uv)
+            {
+                Debug.LogError("Found no tile, will return -1");
             }
             return -1;
         }
+
+        public Tile get_tile_by_pos(Vector2 pos, string coord_sys = "axial")
+        {
+            int i = get_index_by_pos(pos, coord_sys);
+            if(i != -1)
+            {
+                return tiles[get_index_by_pos(pos, coord_sys)];
+            }
+            return null;
+        }
+
         #region momement and range methods
         /// <summary>
         /// Returns true if the two specified tiles are within a certain manhattan range of eachother.
@@ -98,7 +116,7 @@ namespace Assets.scripts
             int dy = (int)System.Math.Abs(tile_1.position_cube.y - tile_2.position_cube.y);
             int dz = (int)System.Math.Abs(tile_1.position_cube.z - tile_2.position_cube.z);
             return dx + dy + dz <= range * 2;
-        } 
+        }
         /// <summary>
         /// Returns all tiles in a certain manhattan range around the specified tile.
         /// </summary>
@@ -108,24 +126,25 @@ namespace Assets.scripts
         public List<Tile> get_tiles_in_range(Tile center, int range = 1)
         {
             List<Tile> in_range_tiles = new List<Tile>();
-            Tile_manager manager = new Tile_manager();           
-            foreach(Tile tile in tiles)
+            Tile_manager manager = new Tile_manager();
+            foreach (Tile tile in tiles)
             {
-                if(tile.position_cube == center.position_cube)
+                if (tile.position_cube == center.position_cube)
                 {
                     continue;
                 }
                 if (is_in_range(center, tile, range))
                 {
                     in_range_tiles.Add(manager.add<Test>(Util.v2_to_v3(tile.position_offset, "y", tile.height)));
-                    
+
                 }
-                
+
             }
             return in_range_tiles;
         }
 
         #endregion
+
 
         #region render
         //Render stuff
@@ -240,12 +259,12 @@ namespace Assets.scripts
                 Vector2 this_pos = tiles[i / 6].position_axial;
 
                 int index = i / 6;
-                int bot = this.get_index_by_axial_pos(this_pos + new Vector2(0, -1));
-                int bot_right = this.get_index_by_axial_pos(this_pos + new Vector2(1, -1));
-                int top_right = this.get_index_by_axial_pos(this_pos + new Vector2(1, 0));
-                int top = this.get_index_by_axial_pos(this_pos + new Vector2(0, 1));
-                int top_left = this.get_index_by_axial_pos(this_pos + new Vector2(-1, 1));
-                int bot_left = this.get_index_by_axial_pos(this_pos + new Vector2(-1, 0));
+                int bot = this.get_index_by_pos(this_pos + new Vector2(0, -1), "axial", true);
+                int bot_right = this.get_index_by_pos(this_pos + new Vector2(1, -1), "axial", true);
+                int top_right = this.get_index_by_pos(this_pos + new Vector2(1, 0), "axial", true);
+                int top = this.get_index_by_pos(this_pos + new Vector2(0, 1), "axial", true);
+                int top_left = this.get_index_by_pos(this_pos + new Vector2(-1, 1), "axial", true);
+                int bot_left = this.get_index_by_pos(this_pos + new Vector2(-1, 0), "axial", true);
 
                 if (k == 0 || k == 1)
                     uv[i + vertices_amount * 3] += get_rect_tex_location(index, bot);

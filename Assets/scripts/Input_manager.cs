@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-namespace Assets.scripts
+namespace Assets.Scripts
 {
     //THIS CLASS DOES NOT HANDLE THE CAMERA CONTROLS
     //THE CAMERA CONTROLS ARE HANDELED IN "attached/Camera_controller.cs"
@@ -35,6 +35,8 @@ namespace Assets.scripts
                         Tile tile = tile_manager[i];
                         Vector3 tile_pos = tile.position;
                         move_focus(tile_pos);
+                        Debug.Log(tile.position_cube);
+                        Debug.Log(tile.position_axial);
                         if (Input.GetMouseButtonDown(0))
                         {
                             for (int j = 0; j < unit_manager.count; j++)
@@ -51,9 +53,9 @@ namespace Assets.scripts
                             //If no unit is found at the clicked tile, move the selected unit to this tile
                             if (selected_unit != -1)
                             {
-                                unit_manager[selected_unit].move(tile_manager[i], unit_manager);
+                                unit_manager[selected_unit].move_goal = tile_manager[i];
                             }
-                                selected_unit = -1;
+                            selected_unit = -1;
                             goto Done;
                         }
                         else

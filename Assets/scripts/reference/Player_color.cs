@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.scripts.reference
+namespace Assets.Scripts.reference
 {
     class Player_color
     {

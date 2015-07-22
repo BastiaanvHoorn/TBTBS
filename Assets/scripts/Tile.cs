@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.scripts;
 
-namespace Assets.scripts
+namespace Assets.Scripts
 {
     /// <summary>
     /// Playfield is built up from tiles
@@ -51,7 +47,6 @@ namespace Assets.scripts
         public abstract Vector2 tex_location { get; }
         public abstract int tex_prio { get; }
         #endregion
-
         #region initializing
         public Tile() { }
         /// <summary>

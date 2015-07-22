@@ -1,27 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.scripts.tile;
+using Assets.Scripts.tile;
 
-namespace Assets.scripts
+namespace Assets.Scripts
 {
     public abstract class Unit
     {
-        public Tile parrent_tile { get; set; }
-        public GameObject obj { get; set; }
+        #region abstract unit stats
         public abstract string model_name { get; }
         public abstract string name { get; }
         public abstract int move_range { get; }
         public abstract int max_health { get; }
         public abstract int attack_range { get; }
         public abstract int damage { get; }
+        #endregion
+
+        public Tile parrent_tile { get; set; }
+        public Path path { get; set; }
+        public GameObject obj { get; set; }
         public int current_health { get; private set; }
         public Player player { get; set; }
-        public bool can_move { get; set; }
-        public bool can_attack { get; set; }
+        public Tile move_goal { get; set; }
+
         public Unit()
         {
+            path = new Path();
             current_health = max_health;
         }
 
@@ -66,42 +70,54 @@ namespace Assets.scripts
         }
         #endregion
         /// <summary>
-        /// Moves this unit to the target tile if possible
+        /// Sets the parrent_tile to the move_goal
         /// </summary>
         /// <param name="target">The tile that the unit will try to move to</param>
-        /// <param name="unit_manager">The unit_manager that contains all the units</param>
         /// <param name="spawn">If this move command spawns the unit. This will bypass the check if the target is actually in range</param>
-        /// <returns>Returns true if succeeded, returns false if failed</returns>
-        public virtual bool move(Tile target, Unit_manager unit_manager, bool spawn = false)
+        /// <returns>Returns true if the move succeeded, returns false if failed</returns>
+        public virtual bool move(Tile_manager tile_manager = null)
         {
-            if ((Tile_manager.is_in_range(this.parrent_tile, target, move_range) && can_move || spawn) && unit_manager.is_tile_free(target))
+            if (tile_manager == null)
             {
-                if (!spawn)
-                {
-                    can_move = false;
-                }
-                else
-                {
-                    this.obj.transform.position = target.position;
-                }
-                this.parrent_tile = target;
-                return true;
+                this.obj.transform.position = move_goal.position;
             }
-            if (unit_manager.is_attackable(target) && Tile_manager.is_in_range(target, parrent_tile, attack_range) && can_attack)
+            else
             {
-                Unit target_unit = unit_manager.get_unit_by_tile(target);
-                if (target_unit.player != this.player)
+                if (move_goal != null)
                 {
 
-                    if (target_unit.attack(this))
-                    {
-                        unit_manager.kill(target_unit);
-                    }
-                    can_attack = false;
-                    can_move = false;
+                    path = new Path(parrent_tile.position_cube, move_goal.position_cube, tile_manager);
                 }
             }
-            return false;
+            return true;
+            //if ((Tile_manager.is_in_range(this.parrent_tile, move_goal, move_range) && can_move || spawn) && unit_manager.is_tile_free(move_goal))
+            //{
+            //    if (!spawn)
+            //    {
+            //        can_move = false;
+            //    }
+            //    else
+            //    {
+            //        this.obj.transform.position = move_goal.position;
+            //    }
+            //    this.parrent_tile = move_goal;
+            //    return true;
+            //}
+            //if (unit_manager.is_attackable(move_goal) && Tile_manager.is_in_range(move_goal, parrent_tile, attack_range) && can_attack)
+            //{
+            //    Unit move_goal_unit = unit_manager.get_unit_by_tile(move_goal);
+            //    if (move_goal_unit.player != this.player)
+            //    {
+
+            //        if (move_goal_unit.attack(this))
+            //        {
+            //            unit_manager.kill(move_goal_unit);
+            //        }
+            //        can_attack = false;
+            //        can_move = false;
+            //    }
+            //}
+            //return false;
         }
         /// <summary>
         /// This function is called by the attacker
@@ -144,10 +160,21 @@ namespace Assets.scripts
         /// <summary>
         /// Used to animate movement
         /// </summary>
-        public void move_towards()
+        public void move_towards(Tile_manager tile_manager)
         {
             Vector3 parrent_pos = parrent_tile.position;
-            Vector3 this_pos = this.obj.transform.position;
+            Vector3 this_pos = obj.transform.position;
+            if (path.tiles.Count > 0 && parrent_pos == this_pos)
+            {
+                parrent_tile = path.tiles[0];
+                path.tiles.RemoveAt(0);
+
+            }
+            //Animation
+            if (this_pos == parrent_pos)
+            {
+                return;
+            }
             if (this_pos.y == parrent_pos.y || Util.v3_to_v2(this_pos, "y") == Util.v3_to_v2(parrent_pos, "y"))
             {
                 this_pos = Vector3.MoveTowards(this_pos, parrent_pos, .1f);
@@ -184,14 +211,7 @@ namespace Assets.scripts
             mesh.RecalculateNormals();
             mesh.Optimize();
             renderer.material = new Material(Shader.Find("Transparent/Diffuse"));
-            if (can_move)
-            {
-                renderer.material.SetColor("_Color", new Color(.12f, .85f, .12f, .5f));
-            }
-            else
-            {
-                renderer.material.SetColor("_Color", new Color(.85f, .08f, .08f, .5f));
-            }
+            renderer.material.SetColor("_Color", new Color(.12f, .85f, .12f, .5f));
             obj.transform.position += new Vector3(0, .01f, 0);
 
             return obj;
