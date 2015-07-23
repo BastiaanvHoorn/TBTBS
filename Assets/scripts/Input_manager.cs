@@ -75,8 +75,8 @@ namespace Assets.Scripts
             type.text = unit.name;
             movespeed.text = "Moverange: " + unit.move_range.ToString();
             strength.text = "Strength: " + unit.current_health.ToString() + "/" + unit.max_health.ToString();
-            current_range = unit_manager[selected_unit].show_range(ref tile_manager);
-            move_focus(unit.parrent_tile.position);
+            current_range = unit_manager[selected_unit].display_range(ref tile_manager);
+            move_focus(unit.next_tile.position);
         }
         private void move_focus(Vector3 pos)
         {

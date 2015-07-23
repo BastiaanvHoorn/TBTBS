@@ -52,7 +52,7 @@ namespace Assets.Scripts
         {
             foreach(Unit unit in unit_manager.units)
             {
-                unit.move_towards(tile_manager);
+                unit.move_update(tile_manager, unit_manager);
             }
             input_manager.process_input(ref unit_manager, ref tile_manager, current_player);  
         }
@@ -78,7 +78,7 @@ namespace Assets.Scripts
         {
             foreach(Unit unit in unit_manager.units)
             {
-                unit.move(tile_manager);
+                unit.start_move(tile_manager);
                 unit.move_goal = null;
 
             }
@@ -94,7 +94,7 @@ namespace Assets.Scripts
                 int x = int.Parse(level[1, i]);
                 float height = float.Parse(level[2, i]);
                 int z = int.Parse(level[3, i]);
-
+                //TODO add string parser
                 switch(level[0,i])
                 {
                     case "Grassland":

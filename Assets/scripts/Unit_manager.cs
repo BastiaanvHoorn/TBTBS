@@ -27,38 +27,25 @@ namespace Assets.Scripts
             units.Add(unit);
             unit.player = player;
             unit.spawn();
-            unit.parrent_tile = tile;
+            unit.next_tile = tile;
             unit.move_goal = tile;
-            unit.move();
+            unit.start_move();
             Debug.Log("Spawning " + unit.to_string());
             return unit;
         }
-        public bool is_tile_free(Tile tile)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <returns>Returns null if no unit is found</returns>
+        public Unit get_unit_by_next_tile(Tile tile)
         {
-            for (int i = 0; i < count; i++)
-            {
-                if (units[i].parrent_tile == tile)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return units.Find(unit => unit.next_tile.position_axial == tile.position_axial);
         }
-        public bool is_attackable(Tile tile)
+        public Unit get_unit_by_occupying_tile(Tile tile)
         {
-            foreach (Unit unit in units)
-            {
-                if (unit.parrent_tile.position_axial == tile.position_axial)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public Unit get_unit_by_tile(Tile tile)
-        {
-            return units.Find(unit => unit.parrent_tile.position_axial == tile.position_axial);
+            Unit unit = units.Find(_unit => _unit.occupiying_tile.position_axial == tile.position_axial);
+            return unit;
         }
         public void kill(Unit unit)
         {

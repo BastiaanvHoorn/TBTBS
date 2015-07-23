@@ -15,14 +15,27 @@ namespace Assets.Scripts
         public abstract int attack_range { get; }
         public abstract int damage { get; }
         #endregion
-
-        public Tile parrent_tile { get; set; }
+        /// <summary>
+        /// The tile that the unit is moving to.
+        /// </summary>
+        public Tile next_tile { get; set; }
+        /// <summary>
+        /// The tile that the unit is moving from.
+        /// </summary>
+        public Tile last_tile { get; set; }
+        /// <summary>
+        /// The tile that the unit is occupying, rounded to the nearest tile while moving. Used for combat.
+        /// </summary>
+        public Tile occupiying_tile{ get; private set; }
+        /// <summary>
+        /// The tile the unit will be movning to. Used for pathfinding
+        /// </summary>
+        public Tile move_goal { get; set; }
+        public bool is_moving { get; set; }
         public Path path { get; set; }
         public GameObject obj { get; set; }
         public int current_health { get; private set; }
         public Player player { get; set; }
-        public Tile move_goal { get; set; }
-
         public Unit()
         {
             path = new Path();
@@ -66,75 +79,141 @@ namespace Assets.Scripts
         }
         public virtual string to_string()
         {
-            return this.GetType().ToString() + " on " + this.obj.transform.position.ToString();
+            string s = string.Format("{0} {1} on {2}", this.player.ToString(), this.GetType().ToString(), this.obj.transform.position.ToString());
+            return s;
         }
         #endregion
         /// <summary>
-        /// Sets the parrent_tile to the move_goal
+        /// Sets the next_tile to the move_goal
         /// </summary>
         /// <param name="target">The tile that the unit will try to move to</param>
         /// <param name="spawn">If this move command spawns the unit. This will bypass the check if the target is actually in range</param>
         /// <returns>Returns true if the move succeeded, returns false if failed</returns>
-        public virtual bool move(Tile_manager tile_manager = null)
+        public virtual bool start_move(Tile_manager tile_manager = null)
         {
             if (tile_manager == null)
             {
+                //This only happens when spawning a unit, bypassing the animation from 0,0 to the actual location
                 this.obj.transform.position = move_goal.position;
             }
             else
             {
                 if (move_goal != null)
                 {
-
-                    path = new Path(parrent_tile.position_cube, move_goal.position_cube, tile_manager);
+                    is_moving = true;
+                    occupiying_tile = next_tile;
+                    path = new Path(next_tile.position_cube, move_goal.position_cube, tile_manager);
                 }
             }
             return true;
-            //if ((Tile_manager.is_in_range(this.parrent_tile, move_goal, move_range) && can_move || spawn) && unit_manager.is_tile_free(move_goal))
-            //{
-            //    if (!spawn)
-            //    {
-            //        can_move = false;
-            //    }
-            //    else
-            //    {
-            //        this.obj.transform.position = move_goal.position;
-            //    }
-            //    this.parrent_tile = move_goal;
-            //    return true;
-            //}
-            //if (unit_manager.is_attackable(move_goal) && Tile_manager.is_in_range(move_goal, parrent_tile, attack_range) && can_attack)
-            //{
-            //    Unit move_goal_unit = unit_manager.get_unit_by_tile(move_goal);
-            //    if (move_goal_unit.player != this.player)
-            //    {
-
-            //        if (move_goal_unit.attack(this))
-            //        {
-            //            unit_manager.kill(move_goal_unit);
-            //        }
-            //        can_attack = false;
-            //        can_move = false;
-            //    }
-            //}
-            //return false;
         }
         /// <summary>
-        /// This function is called by the attacker
+        /// Used to animate movement
         /// </summary>
-        /// <param name="attacker"></param>
+        public void move_update(Tile_manager tile_manager, Unit_manager unit_manager)
+        {
+            if (is_moving)
+            {
+
+                Vector3 next_pos = next_tile.position;
+                Vector3 this_pos = obj.transform.position;
+                //If we are over half of the movement to the next tile, we are no longer occupying the tile we came from but instead the tile we are moving towards
+                if (Vector3.Distance(this_pos, next_pos) < Vector3.Distance(this_pos, occupiying_tile.position))
+                {
+                    Unit target = next_tile.is_attackable(unit_manager, this);
+                    if (target != null)
+                    {
+                        //Attack the target
+                        if(!target.attack(this, unit_manager))
+                        {
+                            //If the target didn't die, go to the last visited tile and stop moving
+                            next_tile = last_tile;
+
+                            path.tiles.Clear();
+                        }
+                        else
+                        {
+                            unit_manager.kill(target);
+                        }
+                    }
+                    occupiying_tile = next_tile;
+
+                }
+
+                //If we have a path to follow, go look at some movement stuff
+                if (path.tiles.Count > 0)
+                {
+                    //If we are at our last selected destination, try to select a new one.
+                    if (next_pos == this_pos)
+                    {
+                        if (path.next.is_movable(unit_manager, this))
+                        {
+                            last_tile = next_tile;
+                            next_tile = path.next;
+                            //Remove the destination (at which we arrived) from the list
+                            path.tiles.RemoveAt(0);
+                        }
+                        //If we can't move to our next tile
+                        else
+                        {
+                            //Since we can't move at the current moment we are very dumb and forget the rest of our path. Our part of this turn is over
+                            path.tiles.Clear();
+                            is_moving = false;
+                        }
+
+                    }
+                }
+                //Animation
+                if (this_pos == next_pos)
+                {
+                    return;
+                }
+                if (this_pos.y == next_pos.y || Util.v3_to_v2(this_pos, "y") == Util.v3_to_v2(next_pos, "y"))
+                {
+                    this_pos = Vector3.MoveTowards(this_pos, next_pos, .1f);
+                }
+                else if (this_pos.y >= next_pos.y)
+                {
+                    this_pos = Vector3.MoveTowards(this_pos, new Vector3(next_pos.x, this_pos.y, next_pos.z), .1f);
+                }
+                else
+                {
+                    this_pos = Vector3.MoveTowards(this_pos, new Vector3(this_pos.x, next_pos.y, this_pos.z), .1f);
+                }
+                this.obj.transform.position = this_pos; 
+            }
+        }
+
+        /// <summary>
+        /// Attack this unit
+        /// </summary>
+        /// <param name="attacker">The unit that is attacking</param>
+        /// <param name="first">If this was a counter attack</param>
         /// <returns>returns if the attacked unit survived</returns>
-        public bool attack(Unit attacker)
+        public virtual bool attack(Unit attacker, Unit_manager unit_manager, bool counter = false)
         {
             int damage = attacker.damage;
             current_health -= damage;
             display_damage(damage);
+
             Debug.Log(attacker.to_string() + " attacked " + this.to_string() + " with " + damage + " damage; " + current_health + " health remaining.");
             if (current_health < 1)
             {
                 return true;
             }
 
+            //If you were attacked first, do a counter attack
+            if (!counter)
+            {
+                //Since we were attacked, cancel all movement for the rest of this turn.
+                path.tiles.Clear();
+                next_tile = occupiying_tile;
+                //Do a counter-attack
+                if(attacker.attack(this, unit_manager, true))
+                {
+                    unit_manager.kill(attacker);
+                }
+            }
             return false;
         }
         private void display_damage(int damage)
@@ -157,45 +236,13 @@ namespace Assets.Scripts
             GameObject.Destroy(damage_splat, 2);
         }
 
-        /// <summary>
-        /// Used to animate movement
-        /// </summary>
-        public void move_towards(Tile_manager tile_manager)
-        {
-            Vector3 parrent_pos = parrent_tile.position;
-            Vector3 this_pos = obj.transform.position;
-            if (path.tiles.Count > 0 && parrent_pos == this_pos)
-            {
-                parrent_tile = path.tiles[0];
-                path.tiles.RemoveAt(0);
-
-            }
-            //Animation
-            if (this_pos == parrent_pos)
-            {
-                return;
-            }
-            if (this_pos.y == parrent_pos.y || Util.v3_to_v2(this_pos, "y") == Util.v3_to_v2(parrent_pos, "y"))
-            {
-                this_pos = Vector3.MoveTowards(this_pos, parrent_pos, .1f);
-            }
-            else if (this_pos.y >= parrent_pos.y)
-            {
-                this_pos = Vector3.MoveTowards(this_pos, new Vector3(parrent_pos.x, this_pos.y, parrent_pos.z), .1f);
-            }
-            else
-            {
-                this_pos = Vector3.MoveTowards(this_pos, new Vector3(this_pos.x, parrent_pos.y, this_pos.z), .1f);
-            }
-            this.obj.transform.position = this_pos;
-        }
-        public GameObject show_range(ref Tile_manager world)
+        public GameObject display_range(ref Tile_manager world)
         {
             Tile_manager range = new Tile_manager();
-            List<Tile> tiles = world.get_tiles_in_range(parrent_tile, move_range);
+            List<Tile> tiles = world.get_tiles_in_range(next_tile, move_range);
 
             range.add(tiles);
-            range.add<Grassland>(Util.v2_to_v3(parrent_tile.position_offset, "y", parrent_tile.height));
+            range.add<Grassland>(Util.v2_to_v3(next_tile.position_offset, "y", next_tile.height));
 
             Vector3[] vertices = range.get_vertices();
             List<int> tri = range.get_tri(vertices);
@@ -210,9 +257,10 @@ namespace Assets.Scripts
             mesh.uv = uv;
             mesh.RecalculateNormals();
             mesh.Optimize();
-            renderer.material = new Material(Shader.Find("Transparent/Diffuse"));
-            renderer.material.SetColor("_Color", new Color(.12f, .85f, .12f, .5f));
+            renderer.material = new Material(Shader.Find("Standard"));
+            renderer.material.SetFloat("_Mode", 3);
             obj.transform.position += new Vector3(0, .01f, 0);
+            renderer.material.color = new Color(.12f, .85f, .12f, .7f);
 
             return obj;
         }

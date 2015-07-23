@@ -48,19 +48,19 @@ namespace Assets.Scripts
         public abstract int tex_prio { get; }
         #endregion
         #region initializing
-        public Tile() { }
+
         /// <summary>
-        /// 
+        /// Creates a tile at the given coordinates
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="x">x</param>
         /// <param name="y">height</param>
-        /// <param name="z"></param>
+        /// <param name="z"><b>offset</b> z</param>
         /// <param name="_index"></param>
         public void init(int x, float _height, int z, int _index)
         {
             height = _height;
             set_positions(x, z);
-           
+
             index = _index;
 
             add_vertices();
@@ -73,14 +73,14 @@ namespace Assets.Scripts
         /// <param name="y"></param>
         private void set_positions(int x, int y)
         {
-            position_offset  = new Vector3(x, y);
+            position_offset = new Vector3(x, y);
             float col;
             float row;
             col = x * reference.World.horizontal_space;
 
             if (x % 2 == 1)
             {
-                 row = y * reference.World.vertical_space + reference.World.vertical_offset;
+                row = y * reference.World.vertical_space + reference.World.vertical_offset;
             }
             else
             {
@@ -106,6 +106,40 @@ namespace Assets.Scripts
 
         }
         #endregion
+        /// <summary>
+        /// Checks if it is possible to attack this tile
+        /// </summary>
+        /// <param name="unit_manager"></param>
+        /// <param name="_player">The unit that wants to attack</param>
+        /// <returns></returns>
+        public Unit is_attackable(Unit_manager unit_manager, Unit attacker)
+        {
+            Unit unit = null;
+            foreach (Unit defender in unit_manager.units)
+            {
+                if(defender.player != attacker.player)
+                {
+                    if(defender.occupiying_tile.position_axial == attacker.next_tile.position_axial)
+                    {
+                        unit = defender;
+                    }
+                }
+            }
+            //Unit unit = unit_manager.units.Find(defender => attacker.occupiying_tile.position_axial == attacker.next_tile.position_axial && attacker.player != defender.player);
+            return unit;
+        }
+        public bool is_movable(Unit_manager unit_manager, Unit _unit)
+        {
+
+            if ((_unit.next_tile.height - height) > 2)//unit_manager.get_unit_by_next_tile(this) != null
+            {
+                string s = string.Format("Can't move {0} to {1}", _unit.to_string(), this.position_axial);
+                Debug.Log(s);
+                return false;
+
+            }
+            return true;
+        }
 
         /// <summary>
         /// Returns true if the given pixel is part of this tile
@@ -173,7 +207,7 @@ namespace Assets.Scripts
         /// <param name="_index">Index of the tile relative to all tiles</param>
         private void add_triangles(int _index)
         {
-            triangles = new List<int> {            
+            triangles = new List<int> {
                 0,2,1,
                 0,3,2,
                 0,5,3,
@@ -257,7 +291,7 @@ namespace Assets.Scripts
                     "tri"
                     ));
             }
-            if(bottom)
+            if (bottom)
             {
                 tris.AddRange(add_triangle(
                     Util.index_of(_vertices2d, vertices2d[0]),
@@ -275,7 +309,7 @@ namespace Assets.Scripts
                     ));
 
             }
-            if(bottom && left)
+            if (bottom && left)
             {
                 tris.AddRange(add_triangle(
                     Util.index_of(_vertices2d, vertices2d[0]),
@@ -285,7 +319,7 @@ namespace Assets.Scripts
                     "tri"
                     ));
             }
-            if(left)
+            if (left)
             {
                 tris.AddRange(add_triangle(
                     Util.index_of(_vertices2d, vertices2d[5]),
@@ -310,19 +344,19 @@ namespace Assets.Scripts
         {
             //Debug.Log("added triangle: " + vertex1 + ", " + vertex2 + ", " + vertex3);
             int index = 0;
-            if(type == "tri")
+            if (type == "tri")
             {
                 index = tile_count;
             }
-            else if(type == "right_rect")
+            else if (type == "right_rect")
             {
                 index = tile_count * 2;
             }
-            else if(type == "bot_rect")
+            else if (type == "bot_rect")
             {
                 index = tile_count * 3;
             }
-            else if(type == "left_rect")
+            else if (type == "left_rect")
             {
                 index = tile_count * 4;
             }
@@ -330,7 +364,7 @@ namespace Assets.Scripts
             {
                 Debug.LogError("something went wrong");
             }
-            return new int[] { vertex1 + index, vertex2 + index, vertex3 + index};
+            return new int[] { vertex1 + index, vertex2 + index, vertex3 + index };
         }
         #endregion
     }

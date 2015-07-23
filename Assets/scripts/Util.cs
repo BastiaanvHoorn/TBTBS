@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts
 {
-    static class Util
+    public static class Util
     {
         /// <summary>
         /// Returns the index of wich the given vector3 in the given array.

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.reference
 {
-    class Player_color
+    public static class Player_color
     {
         public static Color blue = Color.blue;
         public static Color red = Color.red;

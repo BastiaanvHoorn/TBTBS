@@ -1,6 +1,6 @@
 ﻿namespace Assets.Scripts.reference
 {
-    class Math
+    public static class Math
     {
         /// <summary>
         /// square root of 3

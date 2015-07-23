@@ -9,10 +9,7 @@ namespace Assets.Scripts
         public Tile start { get; set; }
         public Tile goal { get; set; }
         public bool completed = false;
-        public Tile this[int index]
-        {
-            get { return tiles[index]; }
-        }
+        public Tile next { get { return tiles[0]; } }
 
         /// <summary>
         /// 
@@ -26,6 +23,7 @@ namespace Assets.Scripts
             tiles = new List<Tile>();
             Tile start = tile_manager.get_tile_by_pos(_start);
             tiles.Add(tile_manager.get_tile_by_pos(_goal, "cube"));
+
         }
         public Path()
         {
