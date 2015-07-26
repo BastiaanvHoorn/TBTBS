@@ -35,8 +35,9 @@ namespace Assets.Scripts
                         Tile tile = tile_manager[i];
                         Vector3 tile_pos = tile.position;
                         move_focus(tile_pos);
-                        Debug.Log(tile.position_cube);
+                        //Debug.Log(tile.position_cube);
                         Debug.Log(tile.position_axial);
+                        Debug.Log(tile.position);
                         if (Input.GetMouseButtonDown(0))
                         {
                             for (int j = 0; j < unit_manager.count; j++)

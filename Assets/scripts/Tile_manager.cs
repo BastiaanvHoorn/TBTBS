@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Assets.Scripts.reference;
 using Assets.Scripts.tile;
+using System;
 
 namespace Assets.Scripts
 {
@@ -28,6 +29,7 @@ namespace Assets.Scripts
                 return tiles[index];
             }
         }
+
         #endregion
         #region adding methods
 
@@ -135,14 +137,21 @@ namespace Assets.Scripts
                 }
                 if (is_in_range(center, tile, range))
                 {
-                    in_range_tiles.Add(manager.add<Test>(Util.v2_to_v3(tile.position_offset, "y", tile.height)));
-
+                    //in_range_tiles.Add(manager.add<Test>(Util.v2_to_v3(tile.position_offset, "y", tile.height)));
+                    in_range_tiles.Add(tile);
                 }
 
             }
             return in_range_tiles;
         }
 
+        public void reset_came_from()
+        {
+            foreach(Tile tile in tiles)
+            {
+                tile.came_from = -1;
+            }
+        }
         #endregion
 
 

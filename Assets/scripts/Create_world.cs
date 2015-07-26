@@ -43,7 +43,6 @@ namespace Assets.Scripts
 
             Debug.Log("Loaded world in " + sw.ElapsedMilliseconds + " ms");
             sw.Stop();
-            end_turn();
             
         }
 
@@ -83,6 +82,10 @@ namespace Assets.Scripts
 
             }
             turns++;
+            foreach(Tile tile in tile_manager.tiles)
+            {
+                tile.came_from = -1;
+            }
             Debug.Log("turn " + turns + " has been ended");
         }
 

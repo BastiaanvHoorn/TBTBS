@@ -102,7 +102,7 @@ namespace Assets.Scripts
                 {
                     is_moving = true;
                     occupiying_tile = next_tile;
-                    path = new Path(next_tile.position_cube, move_goal.position_cube, tile_manager);
+                    path = new Path(next_tile, move_goal, tile_manager);
                 }
             }
             return true;
@@ -235,18 +235,21 @@ namespace Assets.Scripts
             transform.position = camera.WorldToScreenPoint(position);
             GameObject.Destroy(damage_splat, 2);
         }
-
+        //TODO fix non-transparent range
         public GameObject display_range(ref Tile_manager world)
         {
             Tile_manager range = new Tile_manager();
             List<Tile> tiles = world.get_tiles_in_range(next_tile, move_range);
 
-            range.add(tiles);
-            range.add<Grassland>(Util.v2_to_v3(next_tile.position_offset, "y", next_tile.height));
+            foreach(Tile tile in tiles)
+            {
+                range.add<Test>(Util.v2_to_v3(tile.position_offset, "y", tile.height));
+            }
+            //range.add<Test>(Util.v2_to_v3(next_tile.position_offset, "y", occupiying_tile.height));
 
             Vector3[] vertices = range.get_vertices();
             List<int> tri = range.get_tri(vertices);
-            Vector2[] uv = range.get_uv();
+            //Vector2[] uv = range.get_uv();
 
             GameObject obj = new GameObject();
             Mesh mesh = obj.AddComponent<MeshFilter>().mesh;
@@ -254,7 +257,7 @@ namespace Assets.Scripts
 
             mesh.vertices = vertices;
             mesh.triangles = tri.ToArray();
-            mesh.uv = uv;
+            mesh.uv = new Vector2[] { };
             mesh.RecalculateNormals();
             mesh.Optimize();
             renderer.material = new Material(Shader.Find("Standard"));

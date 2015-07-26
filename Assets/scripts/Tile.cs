@@ -46,6 +46,7 @@ namespace Assets.Scripts
         /// </summary>
         public abstract Vector2 tex_location { get; }
         public abstract int tex_prio { get; }
+        public int came_from { get; set; }
         #endregion
         #region initializing
 
@@ -107,10 +108,10 @@ namespace Assets.Scripts
         }
         #endregion
         /// <summary>
-        /// Checks if it is possible to attack this tile
+        /// Checks if it is possible to attack this tile. If so, it returns the unit that you will attack then. Otherwise it returns null
         /// </summary>
         /// <param name="unit_manager"></param>
-        /// <param name="_player">The unit that wants to attack</param>
+        /// <param name="attacker">The attacking unit</param>
         /// <returns></returns>
         public Unit is_attackable(Unit_manager unit_manager, Unit attacker)
         {
@@ -131,7 +132,7 @@ namespace Assets.Scripts
         public bool is_movable(Unit_manager unit_manager, Unit _unit)
         {
 
-            if ((_unit.next_tile.height - height) > 2)//unit_manager.get_unit_by_next_tile(this) != null
+            if (Mathf.Abs(_unit.next_tile.height - height) > 2)//unit_manager.get_unit_by_next_tile(this) != null
             {
                 string s = string.Format("Can't move {0} to {1}", _unit.to_string(), this.position_axial);
                 Debug.Log(s);
