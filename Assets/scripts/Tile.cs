@@ -118,9 +118,9 @@ namespace Assets.Scripts
             Unit unit = null;
             foreach (Unit defender in unit_manager.units)
             {
-                if(defender.player != attacker.player)
+                if (defender.player != attacker.player)
                 {
-                    if(defender.occupiying_tile.position_axial == attacker.next_tile.position_axial)
+                    if (defender.occupiying_tile.position_axial == attacker.next_tile.position_axial)
                     {
                         unit = defender;
                     }
@@ -129,15 +129,16 @@ namespace Assets.Scripts
             //Unit unit = unit_manager.units.Find(defender => attacker.occupiying_tile.position_axial == attacker.next_tile.position_axial && attacker.player != defender.player);
             return unit;
         }
-        public bool is_movable(Unit_manager unit_manager, Unit _unit)
+        /// <summary>
+        /// Checks if the specified unit can move from it's current tile to this tile. Doesn't consider movement range or cost.
+        /// </summary>
+        /// <param name="_unit"></param>
+        /// <returns></returns>
+        public virtual bool is_movable(Unit _unit, float _height)
         {
-
-            if (Mathf.Abs(_unit.next_tile.height - height) > 2)//unit_manager.get_unit_by_next_tile(this) != null
+            if (Mathf.Abs(_height - height) > 2)//unit_manager.get_unit_by_next_tile(this) != null
             {
-                string s = string.Format("Can't move {0} to {1}", _unit.to_string(), this.position_axial);
-                Debug.Log(s);
                 return false;
-
             }
             return true;
         }

@@ -102,7 +102,7 @@ namespace Assets.Scripts
                 {
                     is_moving = true;
                     occupiying_tile = next_tile;
-                    path = new Path(next_tile, move_goal, tile_manager);
+                    path = new Path(next_tile, move_goal, tile_manager, this);
                 }
             }
             return true;
@@ -146,24 +146,24 @@ namespace Assets.Scripts
                     //If we are at our last selected destination, try to select a new one.
                     if (next_pos == this_pos)
                     {
-                        if (path.next.is_movable(unit_manager, this))
-                        {
+                        //if (path.next.is_movable(unit_manager, this))
+                        //{
                             last_tile = next_tile;
                             next_tile = path.next;
                             //Remove the destination (at which we arrived) from the list
                             path.tiles.RemoveAt(0);
-                        }
-                        //If we can't move to our next tile
-                        else
-                        {
-                            //Since we can't move at the current moment we are very dumb and forget the rest of our path. Our part of this turn is over
-                            path.tiles.Clear();
-                            is_moving = false;
-                        }
+                        //}
+                        ////If we can't move to our next tile
+                        //else
+                        //{
+                        //    //Since we can't move at the current moment we are very dumb and forget the rest of our path. Our part of this turn is over
+                        //    path.tiles.Clear();
+                        //    is_moving = false;
+                        //}
 
                     }
                 }
-                //Animation
+                #region animation
                 if (this_pos == next_pos)
                 {
                     return;
@@ -180,7 +180,8 @@ namespace Assets.Scripts
                 {
                     this_pos = Vector3.MoveTowards(this_pos, new Vector3(this_pos.x, next_pos.y, this_pos.z), .1f);
                 }
-                this.obj.transform.position = this_pos; 
+                this.obj.transform.position = this_pos;
+                #endregion
             }
         }
 

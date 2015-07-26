@@ -114,6 +114,10 @@ namespace Assets.Scripts
         /// <param name="tile_2"></param>
         static public bool is_in_range(Tile tile_1, Tile tile_2, int range = 1)
         {
+            if (tile_1.position == tile_2.position)
+            {
+                return false;
+            }
             int dx = (int)System.Math.Abs(tile_1.position_cube.x - tile_2.position_cube.x);
             int dy = (int)System.Math.Abs(tile_1.position_cube.y - tile_2.position_cube.y);
             int dz = (int)System.Math.Abs(tile_1.position_cube.z - tile_2.position_cube.z);
