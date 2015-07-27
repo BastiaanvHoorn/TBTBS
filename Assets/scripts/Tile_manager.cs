@@ -154,6 +154,7 @@ namespace Assets.Scripts
             foreach(Tile tile in tiles)
             {
                 tile.came_from = -1;
+                tile.shortest_path = 9999;
             }
         }
         #endregion

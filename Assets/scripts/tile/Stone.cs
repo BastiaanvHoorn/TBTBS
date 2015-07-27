@@ -10,6 +10,7 @@ namespace Assets.Scripts.tile
     {
         public override Vector2 tex_location { get { return new Vector2(0, 512); } }
         public override int tex_prio { get { return 3; } }
+        public override float move_cost { get { return 2f; } }
         protected override void on_click()
         {
         }

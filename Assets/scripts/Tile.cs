@@ -46,7 +46,9 @@ namespace Assets.Scripts
         /// </summary>
         public abstract Vector2 tex_location { get; }
         public abstract int tex_prio { get; }
+        public abstract float move_cost { get; }
         public int came_from { get; set; }
+        public float shortest_path { get; set; }
         #endregion
         #region initializing
 
