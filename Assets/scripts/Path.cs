@@ -46,12 +46,8 @@ namespace Assets.Scripts
                             if (_tile.is_movable(unit, tile.height))
                             {
                                 float move_cost = tile.shortest_path + tile.move_cost / 2 + _tile.move_cost/2  + System.Math.Abs(_tile.height - tile.height) / 2;
-                                //if (_tile.came_from == -1)
                                 if (_tile.shortest_path > move_cost)
                                 {
-
-
-                                    //unvisited.Add(_tile);
                                     _tile.came_from = tile_manager.tiles.IndexOf(tile);
                                     _tile.shortest_path = move_cost;
                                     frontier.Add(_tile);

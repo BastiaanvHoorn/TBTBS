@@ -32,12 +32,12 @@ namespace Assets.Scripts
                 {
                     if (tile_manager[i].is_pixel_of_tile(Input.mousePosition, Camera.main))
                     {
-                        Tile tile = tile_manager[i];
-                        Vector3 tile_pos = tile.position;
+                        Tile current_tile = tile_manager[i];
+                        Vector3 tile_pos = current_tile.position;
                         move_focus(tile_pos);
                         //Debug.Log(tile.position_cube);
-                        Debug.Log(tile.position_axial);
-                        Debug.Log(tile.position);
+                        //Debug.Log(tile.position_axial);
+                        //Debug.Log(tile.position);
                         if (Input.GetMouseButtonDown(0))
                         {
                             for (int j = 0; j < unit_manager.count; j++)
@@ -54,7 +54,9 @@ namespace Assets.Scripts
                             //If no unit is found at the clicked tile, move the selected unit to this tile
                             if (selected_unit != -1)
                             {
-                                unit_manager[selected_unit].move_goal = tile_manager[i];
+                                //unit_manager[selected_unit].move_goal = tile_manager[i];
+                                Path path = new Path(unit_manager[selected_unit].occupiying_tile, current_tile, tile_manager, unit_manager[selected_unit]);
+                                unit_manager[selected_unit].path = path;
                             }
                             selected_unit = -1;
                             goto Done;

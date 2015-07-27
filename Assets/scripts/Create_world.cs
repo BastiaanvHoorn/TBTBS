@@ -77,15 +77,15 @@ namespace Assets.Scripts
         {
             foreach(Unit unit in unit_manager.units)
             {
+                //if(unit.path != null)
+                //{
+                //    unit.next_tile = unit.occupiying_tile;
+                //    unit.is_moving = true;
+                //}
                 unit.start_move(tile_manager);
-                unit.move_goal = null;
-
+                //unit.move_goal = null;
             }
             turns++;
-            foreach(Tile tile in tile_manager.tiles)
-            {
-                tile.came_from = -1;
-            }
             Debug.Log("turn " + turns + " has been ended");
         }
 

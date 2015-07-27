@@ -26,11 +26,7 @@ namespace Assets.Scripts
         /// <summary>
         /// The tile that the unit is occupying, rounded to the nearest tile while moving. Used for combat.
         /// </summary>
-        public Tile occupiying_tile{ get; private set; }
-        /// <summary>
-        /// The tile the unit will be movning to. Used for pathfinding
-        /// </summary>
-        public Tile move_goal { get; set; }
+        public Tile occupiying_tile { get; set; }
         public bool is_moving { get; set; }
         public Path path { get; set; }
         public GameObject obj { get; set; }
@@ -89,23 +85,11 @@ namespace Assets.Scripts
         /// <param name="target">The tile that the unit will try to move to</param>
         /// <param name="spawn">If this move command spawns the unit. This will bypass the check if the target is actually in range</param>
         /// <returns>Returns true if the move succeeded, returns false if failed</returns>
-        public virtual bool start_move(Tile_manager tile_manager = null)
+        public virtual void start_move(Tile_manager tile_manager)
         {
-            if (tile_manager == null)
-            {
-                //This only happens when spawning a unit, bypassing the animation from 0,0 to the actual location
-                this.obj.transform.position = move_goal.position;
-            }
-            else
-            {
-                if (move_goal != null)
-                {
-                    is_moving = true;
-                    occupiying_tile = next_tile;
-                    path = new Path(next_tile, move_goal, tile_manager, this);
-                }
-            }
-            return true;
+            is_moving = true;
+            occupiying_tile = next_tile;
+
         }
         /// <summary>
         /// Used to animate movement
@@ -124,7 +108,7 @@ namespace Assets.Scripts
                     if (target != null)
                     {
                         //Attack the target
-                        if(!target.attack(this, unit_manager))
+                        if (!target.attack(this, unit_manager))
                         {
                             //If the target didn't die, go to the last visited tile and stop moving
                             next_tile = last_tile;
@@ -139,47 +123,58 @@ namespace Assets.Scripts
                     occupiying_tile = next_tile;
 
                 }
-
                 //If we have a path to follow, go look at some movement stuff
-                if (path.tiles.Count > 0)
+                if (next_pos == this_pos)
                 {
-                    //If we are at our last selected destination, try to select a new one.
-                    if (next_pos == this_pos)
+                    if (path.tiles.Count > 0)
                     {
-                        //if (path.next.is_movable(unit_manager, this))
-                        //{
-                            last_tile = next_tile;
-                            next_tile = path.next;
-                            //Remove the destination (at which we arrived) from the list
-                            path.tiles.RemoveAt(0);
-                        //}
-                        ////If we can't move to our next tile
-                        //else
-                        //{
-                        //    //Since we can't move at the current moment we are very dumb and forget the rest of our path. Our part of this turn is over
-                        //    path.tiles.Clear();
-                        //    is_moving = false;
-                        //}
+                        //If we are at our last selected destination, try to select a new one.
+
+                        last_tile = next_tile;
+                        next_tile = path.next;
+                        //Remove the destination (at which we arrived) from the list
+                        path.tiles.RemoveAt(0);
 
                     }
+                    else
+                    {
+                        //If the path is empty, stop with moving
+                        is_moving = false;
+                    }
                 }
+
                 #region animation
-                if (this_pos == next_pos)
+                //If the y position of our position and the next tile are equal, or if everythig except the y coordinates are equal, move towards the tile in a straight line
+                //float ms_factor = 0;
+                Vector3 _move_pos;
+                Vector3 occ_pos = occupiying_tile.position;
+                float hsq3 = reference.World.half_sqrt_3;
+                if (this_pos.y == next_pos.y || Vector2.Distance(Util.v3_to_v2(this_pos, "y"), Util.v3_to_v2(next_pos, "y")) < 2)
                 {
-                    return;
+                    _move_pos = Vector3.MoveTowards(this_pos, next_pos, .1f / occupiying_tile.move_cost);
                 }
-                if (this_pos.y == next_pos.y || Util.v3_to_v2(this_pos, "y") == Util.v3_to_v2(next_pos, "y"))
-                {
-                    this_pos = Vector3.MoveTowards(this_pos, next_pos, .1f);
-                }
+                //If we are higher then our goal, move horizontally to the edge of this tile
                 else if (this_pos.y >= next_pos.y)
                 {
-                    this_pos = Vector3.MoveTowards(this_pos, new Vector3(next_pos.x, this_pos.y, next_pos.z), .1f);
+                    _move_pos = Vector3.MoveTowards(this_pos, new Vector3(next_pos.x - hsq3, this_pos.y, next_pos.z - .5f), .1f / occupiying_tile.move_cost);
                 }
                 else
                 {
-                    this_pos = Vector3.MoveTowards(this_pos, new Vector3(this_pos.x, next_pos.y, this_pos.z), .1f);
+                    if (occ_pos.x == next_pos.x)
+                    {
+                        _move_pos = Vector3.MoveTowards(this_pos, new Vector3(this_pos.x, next_pos.y, occ_pos.z + .5f), .1f / occupiying_tile.move_cost);
+                    }
+                    else
+                    {
+                        _move_pos = Vector3.MoveTowards(this_pos, new Vector3(
+                            occ_pos.x + ((occ_pos.x < next_pos.x) ? hsq3 : -hsq3), 
+                            next_pos.y, 
+                            occ_pos.z + ((occ_pos.z < next_pos.z)? .5f : -.5f)),
+                            .1f / occupiying_tile.move_cost);
+                    }
                 }
+                this_pos = _move_pos;
+                //Debug.Log(reference.World.diagonal_space);
                 this.obj.transform.position = this_pos;
                 #endregion
             }
@@ -210,7 +205,7 @@ namespace Assets.Scripts
                 path.tiles.Clear();
                 next_tile = occupiying_tile;
                 //Do a counter-attack
-                if(attacker.attack(this, unit_manager, true))
+                if (attacker.attack(this, unit_manager, true))
                 {
                     unit_manager.kill(attacker);
                 }
@@ -242,7 +237,7 @@ namespace Assets.Scripts
             Tile_manager range = new Tile_manager();
             List<Tile> tiles = world.get_tiles_in_range(next_tile, move_range);
 
-            foreach(Tile tile in tiles)
+            foreach (Tile tile in tiles)
             {
                 range.add<Test>(Util.v2_to_v3(tile.position_offset, "y", tile.height));
             }

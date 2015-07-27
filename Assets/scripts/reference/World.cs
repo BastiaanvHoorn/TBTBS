@@ -4,16 +4,17 @@ namespace Assets.Scripts.reference
 {
     public static class World
     {
-        public static float vertical_offset = Math.sqrt_3 + .5f; //2.23205080757
-        public static float vertical_space = vertical_offset * 2; //4.46410161514
-        public static float horizontal_space = 3 + Math.cos_30; //3.86602540378
+        public const float vertical_offset = Math.sqrt_3 + .5f; //2.23205080757
+        public const float vertical_space = vertical_offset * 2; //4.46410161514
+        public const float horizontal_space = 3 + Math.cos_30; //3.86602540378
+        public const float half_sqrt_3 = Math.sqrt_3 / 2;
 
-        public static Vector2 vertex0 = new Vector2(-1, -reference.Math.sqrt_3);
-        public static Vector2 vertex1 = new Vector2(1, -reference.Math.sqrt_3);
-        public static Vector2 vertex2 = new Vector2(2, 0);
-        public static Vector2 vertex3 = new Vector2(1, reference.Math.sqrt_3);
-        public static Vector2 vertex4 = new Vector2(-1, reference.Math.sqrt_3);
-        public static Vector2 vertex5 = new Vector2(-2, 0);
+        public readonly static Vector2 vertex0 = new Vector2(-1, -Math.sqrt_3);
+        public readonly static Vector2 vertex1 = new Vector2(1, -Math.sqrt_3);
+        public readonly static Vector2 vertex2 = new Vector2(2, 0);
+        public readonly static Vector2 vertex3 = new Vector2(1, Math.sqrt_3);
+        public readonly static Vector2 vertex4 = new Vector2(-1, Math.sqrt_3);
+        public readonly static Vector2 vertex5 = new Vector2(-2, 0);
 
         public static Vector2 get_hex_uv(int i)
         {
@@ -52,7 +53,7 @@ namespace Assets.Scripts.reference
             new Vector2(510,254) //top-right
         };
 
-        public static decimal tex_scale = 0.00048828125m;
-        public static int tex_square_amount = 8;
+        public const decimal tex_scale = 0.00048828125m;
+        public const int tex_square_amount = 8;
     }
 }
