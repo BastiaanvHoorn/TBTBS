@@ -937,7 +937,8 @@ MonoBehaviour:
   rigidbody: {fileID: 929407747}
   camera: {fileID: 560541694}
   zoom_speed: 5.19999981
-  move_speed: 28.1000004
+  move_speed: .218999997
+  rotation_speed: .5
 --- !u!1 &1109833886
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,9 +1240,6 @@ MonoBehaviour:
   focus: {fileID: 517230115}
   focus_an: {fileID: 517230116}
   texture: {fileID: 2800000, guid: a631c5d5a94277940bbd7adb3ba8aa3d, type: 3}
-  movespeed: {fileID: 0}
-  strength: {fileID: 0}
-  type: {fileID: 0}
 --- !u!4 &1426351074
 Transform:
   m_ObjectHideFlags: 0

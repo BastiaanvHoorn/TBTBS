@@ -161,22 +161,47 @@ namespace Assets.Scripts
             Vector2 _4 = Util.v3_to_v2(camera.WorldToScreenPoint(position + Util.v2_to_v3(reference.World.vertex4, "y")), "z");
             Vector2 _5 = Util.v3_to_v2(camera.WorldToScreenPoint(position + Util.v2_to_v3(reference.World.vertex5, "y")), "z");
 
-            // All skewed lines that surround this tile
+            Vector2 c = camera.WorldToScreenPoint(position);
+            float cy = c.y;
+            float cx = c.x;
+            float py = pixel.y;
+            float px = pixel.x;
+            //Calculate the y coordinates on the lines that the borders are on with the x of the pixel
+            float[] bot = Util.get_line(_0, _1);
+            float pbot = bot[0] * px + bot[1];
+            float cbot = bot[0] * cx + bot[1];
+
             float[] right_bot = Util.get_line(_1, _2);
+            float pright_bot = right_bot[0] * px + right_bot[1];
+            float cright_bot = right_bot[0] * cx + right_bot[1];
+
             float[] right_top = Util.get_line(_2, _3);
-            float[] left_top = Util.get_line(_5, _4);
+            float pright_top = right_top[0] * px + right_top[1];
+            float cright_top = right_top[0] * cx + right_top[1];
+
+            float[] top = Util.get_line(_3, _4);
+            float ptop = top[0] * px + top[1];
+            float ctop = top[0] * cx + top[1];
+
+            float[] left_top = Util.get_line(_4, _5);
+            float pleft_top = left_top[0] * px + left_top[1];
+            float cleft_top = left_top[0] * cx + left_top[1];
+
             float[] left_bot = Util.get_line(_0, _5);
+            float pleft_bot = left_bot[0] * px + left_bot[1];
+            float cleft_bot = left_bot[0] * cx + left_bot[1];
 
             // Check if the mouse is between those lines
-            if ((pixel.y > right_bot[0] * pixel.x + right_bot[1]) &&
-               (pixel.y < left_top[0] * pixel.x + left_top[1]) &&
-               (pixel.y < right_top[0] * pixel.x + right_top[1]) &&
-               (pixel.y > left_bot[0] * pixel.x + left_bot[1]) &&
-               (pixel.y < _4.y) && (pixel.y > _1.y))
-            {
-                on_click();
-                return true;
-            }
+            if ((cy < cbot) ? (py < pbot) : (py > pbot))
+                if ((cy < cright_bot) ? (py < pright_bot) : (py > pright_bot))
+                    if ((cy < cright_top) ? (py < pright_top) : (py > pright_top))
+                        if ((cy < ctop) ? (py < ptop) : (py > ptop))
+                            if ((cy < cleft_bot) ? (py < pleft_bot) : (py > pleft_bot))
+                                if ((cy < cleft_top) ? (py < pleft_top) : (py > pleft_top))
+                                {
+                                    on_click();
+                                    return true;
+                                }
             return false;
         }
 

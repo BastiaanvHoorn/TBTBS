@@ -5,8 +5,8 @@ Grassland,0,1,2
 Stone,0,2,3
 Stone,0,1,4
 Grassland,0,0,5
-Grassland,1,0,0
-Stone,1,1,1
+Desert,1,0,0
+Grassland,1,0,1
 Stone,1,2,2
 Stone,1,3,3
 Stone,1,3,4

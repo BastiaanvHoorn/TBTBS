@@ -27,38 +27,29 @@ namespace Assets.Scripts
             start.came_from = tile_manager.tiles.IndexOf(start);
             start.shortest_path = 0;
             int came_from;
-            while (true)
+            while (frontier.Count > 0)
             {
                 Tile tile = frontier[0];
                 frontier.RemoveAt(0);
-                if (tile.position == goal.position)
+                foreach (Tile _tile in tile_manager.tiles)
                 {
-                    //tiles.Add(tile);
-                    came_from = tile_manager.tiles.IndexOf(tile);
-                    break;
-                }
-                else
-                {
-                    foreach (Tile _tile in tile_manager.tiles)
+                    if (Tile_manager.is_in_range(_tile, tile))
                     {
-                        if (Tile_manager.is_in_range(_tile, tile))
+                        if (_tile.is_movable(unit, tile.height))
                         {
-                            if (_tile.is_movable(unit, tile.height))
+                            float move_cost = tile.shortest_path + tile.move_cost / 2 + _tile.move_cost / 2 + System.Math.Abs(_tile.height - tile.height) / 2;
+                            if (_tile.shortest_path > move_cost)
                             {
-                                float move_cost = tile.shortest_path + tile.move_cost / 2 + _tile.move_cost/2  + System.Math.Abs(_tile.height - tile.height) / 2;
-                                if (_tile.shortest_path > move_cost)
-                                {
-                                    _tile.came_from = tile_manager.tiles.IndexOf(tile);
-                                    _tile.shortest_path = move_cost;
-                                    frontier.Add(_tile);
-                                }
+                                _tile.came_from = tile_manager.tiles.IndexOf(tile);
+                                _tile.shortest_path = move_cost;
+                                frontier.Add(_tile);
                             }
-
                         }
+
                     }
                 }
             }
-
+            came_from = tile_manager.tiles.IndexOf(goal);
             while (true)
             {
                 if (tile_manager.tiles[came_from] != start)

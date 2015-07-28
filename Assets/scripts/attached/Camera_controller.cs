@@ -8,10 +8,13 @@ public class Camera_controller : MonoBehaviour {
     public new Camera camera;
     [Range(0.1F, 20.0F)]
     public float zoom_speed;
-    [Range(0.1F, 50.0F)]
+    [Range(0.01F, 1.0F)]
     public float move_speed;
+    [Range(0.01F, 1.0F)]
+    public float rotation_speed;
     private Vector3 direction;
     private Vector3 old_mouse_pos;
+    private Vector3 rotate_vector;
     
     private bool left { get { return Input.GetKey(KeyCode.LeftArrow); } }
     private bool right { get { return Input.GetKey(KeyCode.RightArrow); } }
@@ -36,9 +39,22 @@ public class Camera_controller : MonoBehaviour {
     }
     private void move_camera()
     {
+        if(Input.GetMouseButton(1))
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                old_mouse_pos = Input.mousePosition;
+                rotate_vector= transform.rotation.eulerAngles;
+            }
+            else
+            { 
+
+                float diff = old_mouse_pos.x - Input.mousePosition.x;
+                this.transform.rotation = Quaternion.Euler(rotate_vector.x, rotate_vector.y+ diff* rotation_speed *.2f, rotate_vector.z);
+            }
+        }
         if (Input.GetMouseButton(2))
         {
-            rigidbody.velocity = new Vector3();
             //In the frame that the middle mouse button is pressed don't actually move the camera
             //Only retrieve the mouse position so we can move according to that position next frame
             if (Input.GetMouseButtonDown(2))
@@ -48,13 +64,13 @@ public class Camera_controller : MonoBehaviour {
             else
             {
                 Vector3 diff = old_mouse_pos - Input.mousePosition;
-                this.gameObject.transform.position += new Vector3(diff.x, 0, diff.y) / 25;
+                this.gameObject.transform.position += transform.right * diff.x * move_speed *.2f;
+                gameObject.transform.position += Quaternion.AngleAxis(-90f, Vector3.up) * transform.right * diff.y * move_speed * .2f;
                 old_mouse_pos = Input.mousePosition;
             }
         }
         else
         {
-
             if (left && !right)
             {
                 direction = up_down_check(-1);

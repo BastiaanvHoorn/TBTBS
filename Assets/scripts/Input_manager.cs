@@ -15,6 +15,7 @@ namespace Assets.Scripts
         public Text type;
         public Input_manager(GameObject _focus, Animator _focus_an)
         {
+            selected_unit = -1;
             focus = _focus;
             focus_an = _focus_an;
             movespeed = GameObject.Find("stat 1").GetComponent<Text>();
@@ -25,15 +26,14 @@ namespace Assets.Scripts
 
         public void process_input(ref Unit_manager unit_manager, ref Tile_manager tile_manager, Player player)
         {
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(0))
             {
                 Object.Destroy(current_range);
-                for (int i = 0; i < tile_manager.count; i++)
+                foreach (Tile tile in tile_manager.tiles)
                 {
-                    if (tile_manager[i].is_pixel_of_tile(Input.mousePosition, Camera.main))
+                    if (tile.is_pixel_of_tile(Input.mousePosition, Camera.main))
                     {
-                        Tile current_tile = tile_manager[i];
-                        Vector3 tile_pos = current_tile.position;
+                        Vector3 tile_pos = tile.position;
                         move_focus(tile_pos);
                         //Debug.Log(tile.position_cube);
                         //Debug.Log(tile.position_axial);
@@ -55,7 +55,7 @@ namespace Assets.Scripts
                             if (selected_unit != -1)
                             {
                                 //unit_manager[selected_unit].move_goal = tile_manager[i];
-                                Path path = new Path(unit_manager[selected_unit].occupiying_tile, current_tile, tile_manager, unit_manager[selected_unit]);
+                                Path path = new Path(unit_manager[selected_unit].occupiying_tile, tile, tile_manager, unit_manager[selected_unit]);
                                 unit_manager[selected_unit].path = path;
                             }
                             selected_unit = -1;
@@ -71,6 +71,19 @@ namespace Assets.Scripts
                 }
                 Done:;
             }
+            else
+            {
+                if (selected_unit != -1)
+                {
+                    foreach (Tile tile in tile_manager.tiles)
+                    {
+                        if (tile.is_pixel_of_tile(Input.mousePosition, Camera.main))
+                        {
+                            move_focus(tile.position);
+                        }
+                    }
+                }
+            }
         }
 
         private void select_unit(Unit unit, ref Unit_manager unit_manager, ref Tile_manager tile_manager)
@@ -78,13 +91,16 @@ namespace Assets.Scripts
             type.text = unit.name;
             movespeed.text = "Moverange: " + unit.move_range.ToString();
             strength.text = "Strength: " + unit.current_health.ToString() + "/" + unit.max_health.ToString();
-            current_range = unit_manager[selected_unit].display_range(ref tile_manager);
+            //current_range = unit_manager[selected_unit].display_range(ref tile_manager);
             move_focus(unit.next_tile.position);
         }
         private void move_focus(Vector3 pos)
         {
-            focus.transform.position = pos + new Vector3(0, .005f, 0);
-            focus_an.Play("focus_fade", -1, .7f);
+            if(focus.transform.position - new Vector3(0, .005f, 0) != pos)
+            {
+                focus.transform.position = pos + new Vector3(0, .005f, 0);
+                focus_an.Play("focus_fade", -1, .7f);
+            }
         }
     }
 }

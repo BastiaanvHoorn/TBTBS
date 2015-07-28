@@ -38,7 +38,7 @@ namespace Assets.Scripts
             GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
             GetComponent<Renderer>().material.SetFloat("_Glossiness", 0f);
 
-            unit_manager.add<unit.Test>(tile_manager[0], Player.Blue);
+            unit_manager.add<unit.Test>(tile_manager[3], Player.Blue);
             unit_manager.add<unit.Test>(tile_manager[8], Player.Red);
 
             Debug.Log("Loaded world in " + sw.ElapsedMilliseconds + " ms");

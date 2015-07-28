@@ -116,10 +116,25 @@ namespace Assets.Scripts
         /// <param name="first">The first point the line goes through</param>
         /// <param name="second">The second point the line goes through</param>
         /// <returns></returns>
-        public static float[] get_line(Vector2 a, Vector2 b)
+        public static float[] get_line(Vector2 _a, Vector2 _b)
         {
-            
+            Vector2 a;
+            Vector2 b;
+            if(_a.x > _b.x)
+            {
+                a = _a;
+                b = _b;
+            }
+            else
+            {
+                a = _b;
+                b = _a;
+            }
             float slope = (b.y - a.y) / (b.x - a.x);
+            if(slope ==0)
+            {
+                slope += .01f;
+            }
             float offset = a.y - slope * a.x;
             return new float[2]{slope, offset};
         }
