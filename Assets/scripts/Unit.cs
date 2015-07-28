@@ -89,6 +89,7 @@ namespace Assets.Scripts
         {
             is_moving = true;
             occupiying_tile = next_tile;
+            last_tile = occupiying_tile;
 
         }
         /// <summary>
@@ -147,7 +148,7 @@ namespace Assets.Scripts
                 //If the y position of our position and the next tile are equal, or if everythig except the y coordinates are equal, move towards the tile in a straight line
                 //float ms_factor = 0;
                 Vector3 _move_pos;
-                Vector3 occ_pos = occupiying_tile.position;
+                Vector3 occ_pos = last_tile.position;
                 float hsq3 = reference.World.half_sqrt_3;
                 if (this_pos.y == next_pos.y || Vector2.Distance(Util.v3_to_v2(this_pos, "y"), Util.v3_to_v2(next_pos, "y")) < 2)
                 {
@@ -156,7 +157,18 @@ namespace Assets.Scripts
                 //If we are higher then our goal, move horizontally to the edge of this tile
                 else if (this_pos.y >= next_pos.y)
                 {
-                    _move_pos = Vector3.MoveTowards(this_pos, new Vector3(next_pos.x - hsq3, this_pos.y, next_pos.z - .5f), .1f / occupiying_tile.move_cost);
+                    if(occ_pos.x < next_pos.x)
+                    {
+                        _move_pos = Vector3.MoveTowards(this_pos, new Vector3(next_pos.x - hsq3, this_pos.y, next_pos.z - .5f), .1f / occupiying_tile.move_cost);
+                    }
+                    else if(occ_pos.x > next_pos.x)
+                    {
+                        _move_pos = Vector3.MoveTowards(this_pos, new Vector3(next_pos.x - hsq3, this_pos.y, next_pos.z + .5f), .1f / occupiying_tile.move_cost);
+                    }
+                    else
+                    {
+                        _move_pos = Vector3.MoveTowards(this_pos, new Vector3(next_pos.x, this_pos.y, next_pos.z + .5f), .1f / occupiying_tile.move_cost);
+                    }
                 }
                 else
                 {
