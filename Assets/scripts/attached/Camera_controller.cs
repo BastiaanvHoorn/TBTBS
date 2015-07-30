@@ -50,7 +50,7 @@ public class Camera_controller : MonoBehaviour {
             { 
 
                 float diff = old_mouse_pos.x - Input.mousePosition.x;
-                this.transform.rotation = Quaternion.Euler(rotate_vector.x, rotate_vector.y+ diff* rotation_speed *.2f, rotate_vector.z);
+                this.transform.rotation = Quaternion.Euler(rotate_vector.x, rotate_vector.y - diff* rotation_speed *.2f, rotate_vector.z);
             }
         }
         if (Input.GetMouseButton(2))

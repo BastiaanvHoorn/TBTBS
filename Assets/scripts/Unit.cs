@@ -7,6 +7,7 @@ namespace Assets.Scripts
 {
     public abstract class Unit
     {
+        #region variable declaration
         #region abstract unit stats
         public abstract string model_name { get; }
         public abstract string name { get; }
@@ -15,6 +16,7 @@ namespace Assets.Scripts
         public abstract int attack_range { get; }
         public abstract int damage { get; }
         #endregion
+        #region tiles to keep track of
         /// <summary>
         /// The tile that the unit is moving to.
         /// </summary>
@@ -27,7 +29,9 @@ namespace Assets.Scripts
         /// The tile that the unit is occupying, rounded to the nearest tile while moving. Used for combat.
         /// </summary>
         public Tile occupiying_tile { get; set; }
+        #endregion
         public bool is_moving { get; set; }
+        private float move_range_left { get; set; }
         public Path path { get; set; }
         public GameObject obj { get; set; }
         public int current_health { get; private set; }
@@ -37,10 +41,9 @@ namespace Assets.Scripts
             path = new Path();
             current_health = max_health;
         }
-
-        //Create the actual gameobject in the scene
+        #endregion
         #region spawning methods
-
+        //Create the actual gameobject in the scene
         public void spawn()
         {
             obj = new GameObject("soldiers");
@@ -60,8 +63,8 @@ namespace Assets.Scripts
             GameObject unit = new GameObject("soldier");
             unit.AddComponent<MeshFilter>().mesh = Resources.Load<Mesh>("meshes/test_unit");
             unit.transform.localScale = new Vector3(.2f, .2f, .2f);
-            //unit.AddComponent<MeshFilter>().mesh = AssetDatabase.LoadAssetAtPath<Mesh>("Assets/meshes/test_unit.3ds");
-            Material material = unit.AddComponent<MeshRenderer>().material = new Material(Shader.Find("Diffuse"));
+
+            Material material = unit.AddComponent<MeshRenderer>().material;
             if (this.player == Player.Blue)
             {
                 material.color = reference.Player_color.blue;
@@ -79,6 +82,7 @@ namespace Assets.Scripts
             return s;
         }
         #endregion
+        #region movement methods
         /// <summary>
         /// Sets the next_tile to the move_goal
         /// </summary>
@@ -87,10 +91,10 @@ namespace Assets.Scripts
         /// <returns>Returns true if the move succeeded, returns false if failed</returns>
         public virtual void start_move(Tile_manager tile_manager)
         {
+            move_range_left = move_range;
             is_moving = true;
             occupiying_tile = next_tile;
-            last_tile = occupiying_tile;
-
+            last_tile = next_tile;
         }
         /// <summary>
         /// Used to animate movement
@@ -105,6 +109,7 @@ namespace Assets.Scripts
                 //If we are over half of the movement to the next tile, we are no longer occupying the tile we came from but instead the tile we are moving towards
                 if (Vector3.Distance(this_pos, next_pos) < Vector3.Distance(this_pos, occupiying_tile.position))
                 {
+                    //Check if we can attack the next tile
                     Unit target = next_tile.is_attackable(unit_manager, this);
                     if (target != null)
                     {
@@ -124,17 +129,24 @@ namespace Assets.Scripts
                     occupiying_tile = next_tile;
 
                 }
-                //If we have a path to follow, go look at some movement stuff
+                //If we are at our last selected destination, try to select a new one.
                 if (next_pos == this_pos)
                 {
+                    //If we have a path to follow, go look at some movement stuff
                     if (path.tiles.Count > 0)
                     {
-                        //If we are at our last selected destination, try to select a new one.
-
-                        last_tile = next_tile;
-                        next_tile = path.next;
-                        //Remove the destination (at which we arrived) from the list
-                        path.tiles.RemoveAt(0);
+                        move_range_left -= path.next.move_cost;
+                        if (move_range_left > 0)
+                        {
+                            last_tile = next_tile;
+                            next_tile = path.next;
+                            //Remove the destination (at which we arrived) from the list
+                            path.tiles.RemoveAt(0);
+                        }
+                        else
+                        {
+                            is_moving = false;
+                        }
 
                     }
                     else
@@ -157,11 +169,11 @@ namespace Assets.Scripts
                 //If we are higher then our goal, move horizontally to the edge of this tile
                 else if (this_pos.y >= next_pos.y)
                 {
-                    if(occ_pos.x < next_pos.x)
+                    if (occ_pos.x < next_pos.x)
                     {
                         _move_pos = Vector3.MoveTowards(this_pos, new Vector3(next_pos.x - hsq3, this_pos.y, next_pos.z - .5f), .1f / occupiying_tile.move_cost);
                     }
-                    else if(occ_pos.x > next_pos.x)
+                    else if (occ_pos.x > next_pos.x)
                     {
                         _move_pos = Vector3.MoveTowards(this_pos, new Vector3(next_pos.x - hsq3, this_pos.y, next_pos.z + .5f), .1f / occupiying_tile.move_cost);
                     }
@@ -179,9 +191,9 @@ namespace Assets.Scripts
                     else
                     {
                         _move_pos = Vector3.MoveTowards(this_pos, new Vector3(
-                            occ_pos.x + ((occ_pos.x < next_pos.x) ? hsq3 : -hsq3), 
-                            next_pos.y, 
-                            occ_pos.z + ((occ_pos.z < next_pos.z)? .5f : -.5f)),
+                            occ_pos.x + ((occ_pos.x < next_pos.x) ? hsq3 : -hsq3),
+                            next_pos.y,
+                            occ_pos.z + ((occ_pos.z < next_pos.z) ? .5f : -.5f)),
                             .1f / occupiying_tile.move_cost);
                     }
                 }
@@ -191,7 +203,7 @@ namespace Assets.Scripts
                 #endregion
             }
         }
-
+        #endregion
         /// <summary>
         /// Attack this unit
         /// </summary>
@@ -224,6 +236,7 @@ namespace Assets.Scripts
             }
             return false;
         }
+        #region display methods
         private void display_damage(int damage)
         {
             Canvas canvas = GameObject.FindObjectOfType<Canvas>();
@@ -243,37 +256,72 @@ namespace Assets.Scripts
             transform.position = camera.WorldToScreenPoint(position);
             GameObject.Destroy(damage_splat, 2);
         }
-        //TODO fix non-transparent range
-        public GameObject display_range(ref Tile_manager world)
+        public GameObject display_range(ref Tile_manager world, Path _path = null)
         {
-            Tile_manager range = new Tile_manager();
-            List<Tile> tiles = world.get_tiles_in_range(next_tile, move_range);
-
-            foreach (Tile tile in tiles)
+            //If no path is specified, use the path that is already set.
+            //Also don't display the range we can't move to
+            bool display_actual_path = false;
+            if (_path == null)
             {
-                range.add<Test>(Util.v2_to_v3(tile.position_offset, "y", tile.height));
+                _path = path;
+                display_actual_path = true;
             }
-            //range.add<Test>(Util.v2_to_v3(next_tile.position_offset, "y", occupiying_tile.height));
 
-            Vector3[] vertices = range.get_vertices();
-            List<int> tri = range.get_tri(vertices);
-            //Vector2[] uv = range.get_uv();
-
-            GameObject obj = new GameObject();
-            Mesh mesh = obj.AddComponent<MeshFilter>().mesh;
-            Renderer renderer = obj.AddComponent<MeshRenderer>();
-
-            mesh.vertices = vertices;
-            mesh.triangles = tri.ToArray();
-            mesh.uv = new Vector2[] { };
-            mesh.RecalculateNormals();
-            mesh.Optimize();
-            renderer.material = new Material(Shader.Find("Standard"));
-            renderer.material.SetFloat("_Mode", 3);
-            obj.transform.position += new Vector3(0, .01f, 0);
-            renderer.material.color = new Color(.12f, .85f, .12f, .7f);
-
-            return obj;
+            GameObject _object = new GameObject("range");
+            _object.transform.position = obj.transform.position;
+            Tile last_tile = occupiying_tile;
+            float display_range_left = move_range;
+            foreach (Tile tile in _path.tiles)
+            {
+                display_range_left -= tile.move_cost;
+                if (display_actual_path)
+                {
+                    if (display_range_left <= 0)
+                    {
+                        break;
+                    }
+                }
+                GameObject plane = create_pathing_plane(tile, last_tile, (display_range_left > 0 ? Color.green : Color.red));
+                plane.transform.SetParent(_object.transform);
+                GameObject last_plane = create_pathing_plane(last_tile, tile, (display_range_left > 0 ? Color.green : Color.red));
+                last_plane.transform.SetParent(_object.transform);
+                last_tile = tile;
+            }
+            return _object;
         }
+        private GameObject create_pathing_plane(Tile tile, Tile last_tile, Color color)
+        {
+            GameObject plane_parent = new GameObject("parent");
+            GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            plane.transform.SetParent(plane_parent.transform);
+            plane_parent.transform.position += new Vector3(tile.position.x, tile.position.y, tile.position.z);
+            plane.transform.localScale = new Vector3(0.1f, 0.01f, 0.2f * (reference.Math.sqrt_3 / 2));
+            plane.transform.position += new Vector3(0, 0, (reference.Math.sqrt_3 / 2));
+            if (tile.position_axial + new Vector2(1, 0) == last_tile.position_axial)
+            {
+                plane_parent.transform.Rotate(0, 60, 0);
+            }
+            else if (tile.position_axial + new Vector2(1, -1) == last_tile.position_axial)
+            {
+                plane_parent.transform.Rotate(0, 120, 0);
+            }
+            else if (tile.position_axial + new Vector2(0, -1) == last_tile.position_axial)
+            {
+                plane_parent.transform.Rotate(0, 180, 0);
+            }
+            else if (tile.position_axial + new Vector2(-1, 0) == last_tile.position_axial)
+            {
+                plane_parent.transform.Rotate(0, 240, 0);
+            }
+            else if (tile.position_axial + new Vector2(-1, 1) == last_tile.position_axial)
+            {
+                plane_parent.transform.Rotate(0, 300, 0);
+            }
+            float angle = Vector2.Angle(Util.v3_to_v2(tile.position, "y"), Util.v3_to_v2(last_tile.position, "y"));
+            plane.GetComponent<MeshRenderer>().material.color = color;
+            plane_parent.transform.position += new Vector3(0, 0.01f);
+            return plane_parent;
+        }
+        #endregion
     }
 }

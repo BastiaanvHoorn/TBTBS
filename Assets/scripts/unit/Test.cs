@@ -23,7 +23,7 @@ namespace Assets.Scripts.unit
         {
             get
             {
-                return 2;
+                return 4;
             }
         }
 
