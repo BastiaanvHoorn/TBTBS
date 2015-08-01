@@ -10,6 +10,7 @@ namespace Assets.Scripts
         #region variable declaration
         #region abstract unit stats
         public abstract string model_name { get; }
+        //The name that will be displayed on the screen when the unit is selected
         public abstract string name { get; }
         public abstract int move_range { get; }
         public abstract int max_health { get; }

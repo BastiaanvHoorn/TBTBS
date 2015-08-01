@@ -5,11 +5,12 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public enum Player { Blue, Red };
+    public enum Player { Blue, Red, Neutral };
     public class Create_world : MonoBehaviour
     {
         Unit_manager unit_manager = new Unit_manager();
         Tile_manager tile_manager = new Tile_manager();
+        Structure_manager structure_manager = new Structure_manager();
         Input_manager input_manager;
 
         public int turns;
@@ -39,6 +40,7 @@ namespace Assets.Scripts
 
             unit_manager.add<unit.Test>(tile_manager[0], Player.Blue);
             unit_manager.add<unit.Test>(tile_manager[8], Player.Red);
+            structure_manager.add<structure.Test>(tile_manager[12], Player.Red);
 
             Debug.Log("Loaded world in " + sw.ElapsedMilliseconds + " ms");
             sw.Stop();

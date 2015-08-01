@@ -30,7 +30,6 @@ namespace Assets.Scripts
             unit.next_tile = tile;
             unit.occupiying_tile = tile;
             unit.obj.transform.position = tile.position;
-            //unit.start_move();
             Debug.Log("Spawning " + unit.to_string());
             return unit;
         }
